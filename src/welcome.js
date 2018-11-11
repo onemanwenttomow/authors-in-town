@@ -12,7 +12,7 @@ export function Welcome() {
             <div className="container">
                 <div className="header">
                     <div>
-                        <Link className="no-underline" to="/login"><p className="logo">AuthorsInTown<i className="logo logohover far fa-bookmark"></i></p></Link>
+                        <Link className="no-underline" to="/login"><p className="logo"><i className="logo logohover far fa-bookmark"></i> Authors<span className="pink">In</span>Town</p></Link>
                     </div>
                     <div>
                         <Link className="btn menubtn" to="/login">Login</Link>
@@ -25,7 +25,7 @@ export function Welcome() {
                     <div className="video-container">
                         <div className="filter"></div>
                         <video autoPlay loop className="fillWidth">
-                            <source src="/videos/book.png" type="video/mp4" />Your browser does not support the video tag. I suggest you upgrade your browser.
+                            <source src="/videos/Candolim-Beach.jpg" type="video/mp4" />Your browser does not support the video tag. I suggest you upgrade your browser.
                             <source src="/videos/Candolim-Beach.mp4" type="video/webm" />Your browser does not support the video tag. I suggest you upgrade your browser.
                         </video>
                         <div className="poster hidden">

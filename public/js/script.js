@@ -1,3 +1,33 @@
+// window.addEventListener('load', function(){
+//     new Glider(document.querySelector('.glider'), {
+//         slidesToShow: 1,
+//         slidesToScroll: 1,
+//         duration: .75,
+//         // easeInQuad
+//         easing: function (x, t, b, c, d) {
+//             return c*(t/=d)*t + b;
+//         },
+//         arrows: {
+//             prev: '.glider-prev',
+//             next: '.glider-next'
+//         },
+//         dots: '#dots',
+//         responsive: [{
+//             breakpoint: 900,
+//             settings: {
+//                 slidesToShow: 3,
+//                 slidesToScroll: 3,
+//             }
+//         },{
+//             breakpoint: 575,
+//             settings: {
+//                 slidesToShow: 2,
+//                 slidesToScroll: 2,
+//             }
+//         }]
+//     });
+// });
+
 /// jQuery is required to run this code
   $( document ).ready(function() {
     scaleVideoContainer();

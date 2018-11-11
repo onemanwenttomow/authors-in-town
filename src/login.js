@@ -64,7 +64,7 @@ export class Login extends React.Component {
     render() {
         return (
             <div className="login-container">
-                <h2 className="welcome-message">Please login below.</h2>
+                <h2 className="">Please login below.</h2>
                 {this.state.error && <div className="error centre">Something went wrong. Please try again</div>}
                 <label>
                     Email:
