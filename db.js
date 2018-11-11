@@ -27,6 +27,12 @@ exports.updateUserImage = function(id, imgurl) {
     return db.query(q, params);
 };
 
+exports.updateUserGooReadsStatus = function(id) {
+    const q = `UPDATE users SET approvedGoodReads = true WHERE id = $1`;
+    const params = [id || null];
+    return db.query(q, params);
+};
+
 exports.updateUserLocation = function(id, city, country) {
     const q = `UPDATE users SET city = $2, country = $3 WHERE id = $1 RETURNING city, country`;
     const params = [id || null, city || null, country || null];
@@ -42,5 +48,16 @@ exports.getHashedPw = function(email){
 exports.getUserInfo = function(id) {
     const q = `SELECT first, last, id, approvedGoodReads, imgurl, city, country FROM users WHERE id = $1`;
     const params = [id || null,];
+    return db.query(q, params);
+};
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////         AUTHORS         ///////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+exports.insertNewAuthor = function(name, userid, img, pop, goodreadsid) {
+    const q = `INSERT INTO authors (name, user_id, author_pic_url, popularity_ranking, goodreads_id)
+            VALUES ($1, $2, $3, $4, $5)`;
+    const params = [name || null, userid || null, img || null, pop || null, goodreadsid || null];
     return db.query(q, params);
 };

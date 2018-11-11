@@ -38,7 +38,6 @@ class MainEvents extends React.Component {
         if (!this.props.userInfo) {
             return null;
         }
-        console.log("Before render: ", this.props);
         if (this.props.userInfo.data.approvedgoodreads) {
             if (this.props.loaction) {
                 return (

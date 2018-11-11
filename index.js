@@ -7,6 +7,7 @@ const multer            = require('multer');
 const uidSafe           = require('uid-safe');
 const path              = require('path');
 const axios             = require('axios');
+const url               = require('url');
 const convert           = require('xml-js');
 const goodreads         = require('goodreads-api-node');
 const auth              = require('./auth.js');
@@ -23,7 +24,7 @@ const myCredentials = {
 };
 
 const gr = goodreads(myCredentials);
-gr.initOAuth('http://localhost:8080/#verified');
+gr.initOAuth('http://localhost:8080/');
 
 
 const app = express();
@@ -142,7 +143,17 @@ app.get('/getuserinfo.json', function(req, res) {
         }).catch(err => { console.log(err); });
 });
 
-app.get('/token/:tok', (req, res) => {
+app.get('/authgoodreads.json', (req, res) => {
+    gr.getRequestToken()
+        .then((goodreadsurl) => {
+            res.json({
+                url: goodreadsurl,
+                success: true
+            });
+        }).catch(err => {console.log(err);});
+});
+
+app.get('/token.json', (req, res) => {
     console.log("MADE IT HERE!!!");
     gr.getAccessToken()
         .then(() => {
@@ -150,34 +161,60 @@ app.get('/token/:tok', (req, res) => {
             gr.followAuthor(4432)
                 .then((data) => {
                     req.session.goodReadsId = data.author_following.user.id;
-                    res.json({success: true});
+                    axios.get(`https://www.goodreads.com/review/list/${req.session.goodReadsId}.xml?key=${secrets.key}&shelf=read&per_page=200&v=2`)
+                        .then((data) => {
+                            console.log("converting...");
+                            let xml = data.data;
+                            let result1 = convert.xml2json(xml, {compact: true, spaces: 4});
+                            let obj = JSON.parse(result1);
+                            console.log("should be finished");
+                            console.log("Info about authors: ", obj.GoodreadsResponse.reviews.review[2].book.authors.author.id._text);
+
+                            let authorsArray = [];
+                            for (var i = 0; i < obj.GoodreadsResponse.reviews.review.length; i++) {
+                                authorsArray.push({
+                                    name: obj.GoodreadsResponse.reviews.review[i].book.authors.author.name._text,
+                                    author_pic_url: obj.GoodreadsResponse.reviews.review[i].book.authors.author.image_url._cdata,
+                                    popularity_ranking: obj.GoodreadsResponse.reviews.review[i].book.authors.author.text_reviews_count._text,
+                                    goodreads_id: obj.GoodreadsResponse.reviews.review[i].book.authors.author.id._text,
+                                });
+                            }
+                            let uniqueAuthors = authorsArray.filter((thing, index, self) =>
+                                index === self.findIndex((t) => (
+                                    t.name === thing.name
+                                ))
+                            );
+
+                            console.log(uniqueAuthors);
+                            console.log("!!!", req.session.userId);
+                            res.json({uniqueAuthors: uniqueAuthors});
+                            for (let i = 0; i < uniqueAuthors.length; i++) {
+                                db.insertNewAuthor(
+                                    uniqueAuthors[i].name,
+                                    req.session.userId,
+                                    uniqueAuthors[i].author_pic_url,
+                                    uniqueAuthors[i].popularity_ranking,
+                                    uniqueAuthors[i].goodreads_id,
+                                );
+                            }
+                        }).catch(err => {console.log(err);});
                 }).catch(err => {console.log(err);});
         }).catch(err => {console.log(err);});
 });
 
-app.get('/getAuthors.json', (req, res) => {
-    console.log("user id before getting books: ", req.session.goodReadsId);
-    axios.get(`https://www.goodreads.com/review/list/${req.session.goodReadsId}.xml?key=${secrets.key}&shelf=read&per_page=50&v=2`)
+app.post('/setgoodreadstotrue', (req, res) => {
+    db.updateUserGooReadsStatus(req.session.userId)
+        .then(data => {
+            console.log(data);
+            res.json({success: true});
+        }).catch(err => { console.log(err); });
+});
+
+app.get('/testing', (req, res) => {
+    gr.getAuthorInfo(1654)
         .then((data) => {
-            console.log("converting...");
-            let xml = data.data;
-            let result1 = convert.xml2json(xml, {compact: true, spaces: 4});
-            // fs.writeFileSync('test.json', result1);
-            let obj = JSON.parse(result1);
-            console.log("should be finished");
-            console.log("Info about authors: ", obj.GoodreadsResponse.reviews.review[2].book.authors.author);
-
-            let authorsArray = [];
-            for (var i = 0; i < obj.GoodreadsResponse.reviews.review.length; i++) {
-                authorsArray.push(obj.GoodreadsResponse.reviews.review[i].book.authors.author.name._text);
-            }
-            let uniqueAuthors = authorsArray.filter(function(item, pos, self) {
-                return self.indexOf(item) == pos;
-            });
-
-            console.log(uniqueAuthors);
-            console.log("!!!", req.session.userId);
-            res.json(uniqueAuthors);
+            console.log(data);
+            res.redirect('/');
         }).catch(err => {console.log(err);});
 });
 
