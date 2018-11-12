@@ -126,16 +126,17 @@ class AddEvents extends React.Component {
                             { this.props.events.data.map(
                                 event => (
                                     <div className="event" key={event.id}>
+
                                         <div className="delete" onClick={e => this.deleteEvent(event.id)}>
                                             <i className="fas fa-minus-circle deleteicon"></i>
                                         </div>
+                                        <img className="eventphoto" src={event.author_pic_url} alt={event.name}/>
                                         <div className="datebox">
                                             <div className="day"> {event.event_time.split('-')[2].substring(0,2)} </div>
                                             <div className="month"> {event.event_time.split('-')[1]} </div>
                                         </div>
                                         <h3 className="blue authorname">{event.name}</h3>
                                         <p className="eventlocation">{event.venue_name}</p>
-                                        <button className="btn inline" >Register</button>
                                     </div>
                                 )
                             )}
@@ -143,8 +144,8 @@ class AddEvents extends React.Component {
                     </div>
 
 
-                    <div>
-                        <h2 className="">Add an event</h2>
+                    <div className="add-event-form">
+                        <h2 className="add-a-event-title">Add an event</h2>
                         {this.state.error && <div className="error centre">Please try again, that email might be taken</div>}
                         <label>
                             Author Name:

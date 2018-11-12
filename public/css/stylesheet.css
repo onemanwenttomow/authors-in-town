@@ -182,10 +182,18 @@ ul, li { /* reset the margin and padding */
 
 .book {
     /* position: relative; */
-    width: 120px;
+    width: 80px;
+    height: 140px;
     margin: 0;
     top: 0;
     display: inline-block;
+    padding-left: 5px;
+    padding-right: 5px;
+
+}
+
+.bookimage {
+    width: 80px;
 }
 
 .books {
@@ -196,14 +204,16 @@ ul, li { /* reset the margin and padding */
     /* overflow-y: scroll; */
 }
 
+h5 {
+    margin-top: 5px;
+}
+
 /* ///////////////////////////////////////////////////////////////////////// */
 /* ///////////////////            EVENTS              ////////////////////// */
 /* ///////////////////////////////////////////////////////////////////////// */
 .events-container {
     width: 100%;
-    overflow-y: scroll;
 }
-
 
 .event {
     position: relative;
@@ -264,6 +274,20 @@ ul, li { /* reset the margin and padding */
     font-size: 18px;
     text-align: center;
 }
+
+input[type="datetime-local"]:hover {
+    color: #364f6b;
+}
+
+.add-event-form {
+    border-left: 1px solid #f5f5f5;
+    padding: 5px;
+}
+
+.add-a-event-title {
+    padding-left: 5px;
+}
+
 /* ///////////////////////////////////////////////////////////////////////// */
 /* ///////////////////            SEARCH              ////////////////////// */
 /* ///////////////////////////////////////////////////////////////////////// */

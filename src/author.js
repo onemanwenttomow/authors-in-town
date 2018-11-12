@@ -24,7 +24,7 @@ class Author extends React.Component {
                     .then((data) => {
                         console.log("BOOKS!: ", data);
                         this.setState({
-                            books: data.data.book,
+                            books: data.data,
                         });
                     }).catch(err => { console.log(err); });
 
@@ -108,10 +108,10 @@ class Author extends React.Component {
                                 book => (
                                     <div className="book" key={book.isbn}>
 
-                                        <h3 className="blue">{book.title_without_series}</h3>
                                         <a href={book.link}>
-                                            <img className="inline" src={book.image_url} alt={book.title_without_series}/>
+                                            <img className="bookimage inline" src={book.image_url} alt={book.title_without_series}/>
                                         </a>
+                                        <h5 className="blue">{book.title_without_series}</h5>
 
                                     </div>
                                 )

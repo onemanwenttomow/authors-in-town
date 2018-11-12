@@ -275,7 +275,7 @@ app.get('/getauthorbooks.json/:id', (req, res) => {
     gr.getAuthorInfo(req.params.id)
         .then((data) => {
             // console.log(data.books);
-            res.json(data.books);
+            res.json(data.books.book.slice(0,9));
         }).catch(err => {console.log(err);});
 });
 
