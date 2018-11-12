@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { getUserInfo, addLocation } from './actions';
 import axios from './axios';
 import GetFavAuthors from './getfavauthors';
+import AddEvents from './addevents';
 
 
 class MainEvents extends React.Component {
@@ -12,21 +13,17 @@ class MainEvents extends React.Component {
     }
     componentDidMount() {
         this.props.dispatch(getUserInfo());
-        console.log(this.props);
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition((position) => {
-                console.log("GEO!:", position.coords.latitude, position.coords.longitude);
                 axios.get(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
                     .then(data => {
-                        console.log("data back from axios location", data.data);
                         let locationData = {
                             city: data.data.address.city,
                             country: data.data.address.country
                         };
                         this.props.dispatch(addLocation(locationData));
                         axios.post('/updatelocation.json', (locationData))
-                            .then(data => {
-                                console.log(data);
+                            .then(() => {
                             }).catch(err => { console.log(err); });
                     }).catch(err => { console.log(err); });
             });
@@ -37,6 +34,12 @@ class MainEvents extends React.Component {
     render() {
         if (!this.props.userInfo) {
             return null;
+        }
+        console.log("PROPS TO CHECK:", this.props);
+        if (this.props.userInfo.data.author) {
+            return (
+                <AddEvents />
+            );
         }
         if (this.props.userInfo.data.approvedgoodreads) {
             if (this.props.loaction) {

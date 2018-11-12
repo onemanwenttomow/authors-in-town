@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { getUserInfo } from './actions';
 import Header from './header';
 import MainEvents from './mainevents';
+import Author from './author';
 
 
 
@@ -29,7 +30,13 @@ class App extends React.Component {
                 <Header />
                 <BrowserRouter>
                     <Switch>
-                        <Route path="/" component = { MainEvents } />
+                        <Route
+                            path="/author/:id"
+                            render={props => (
+                                <Author {...props} key={props.match.url} />
+                            )}
+                        />
+                        <Route exact path="/" component = { MainEvents } />
                     </ Switch>
                 </BrowserRouter>
             </div>

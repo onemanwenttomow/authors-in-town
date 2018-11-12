@@ -3,7 +3,7 @@ body {
     margin: 0;
     background-color: #f5f5f5;
     color: #364f6b;
-    overflow-y: hidden;
+    /* overflow-y: hidden; */
 
 }
 
@@ -19,10 +19,22 @@ h2 {
 
 img { object-fit: cover; }
 
+ul {
+    list-style:none;
+}
+ul, li { /* reset the margin and padding */
+    margin: 0;
+    padding: 5px;
+    padding-left: 0;
+}
+
+.welcomeicon {
+    padding-right: 5px;
+}
+
 .no-underline { text-decoration: none; }
 
-.pink { color: #fc5185; }
-.blue { color: #3fc1c9; }
+
 
 .main-container {
     width: 100%;
@@ -33,6 +45,18 @@ img { object-fit: cover; }
     border-radius: 4px;
     padding: 20px;
 
+}
+
+.main-container-flex {
+    width: 100%;
+    max-width: 1050px;
+    margin-top: 10px;
+    background-color: white;
+    margin: 10px auto;
+    border-radius: 4px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
 }
 
 
@@ -134,7 +158,112 @@ img { object-fit: cover; }
 }
 
 
+/* ///////////////////////////////////////////////////////////////////////// */
+/* ///////////////////         AUTHOR PROFILE         ////////////////////// */
+/* ///////////////////////////////////////////////////////////////////////// */
 
+.eventsarea {
+    width: 70%;
+}
+
+.stretchedevent {
+    display: flex;
+    justify-content: space-between;
+}
+
+.line {
+    border-bottom: 1px solid #f5f5f5;
+    margin-bottom: 20px;
+}
+
+.extrapadding {
+    padding-bottom: 5px;
+}
+
+.book {
+    /* position: relative; */
+    width: 120px;
+    margin: 0;
+    top: 0;
+    display: inline-block;
+}
+
+.books {
+    width: 270px;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    /* overflow-y: scroll; */
+}
+
+/* ///////////////////////////////////////////////////////////////////////// */
+/* ///////////////////            EVENTS              ////////////////////// */
+/* ///////////////////////////////////////////////////////////////////////// */
+.events-container {
+    width: 100%;
+    overflow-y: scroll;
+}
+
+
+.event {
+    position: relative;
+    width: 160px;
+    height: 280px;
+    display: inline-block;
+    margin: 10px;
+    border-radius: 4px;
+    box-shadow: 0 3px 15px 0 rgba(0,0,0,.09);
+    overflow: hidden;
+}
+
+.eventphoto {
+    width: 160px;
+    height: 160px;
+}
+
+.authorname {
+    margin: 5px 0 5px 10px;
+}
+
+.eventlocation {
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.datebox {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: 100px;
+    left: 10px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+}
+
+.delete {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: white;
+}
+
+.deleteicon {
+    top: 5px;
+    right: 5px;
+    color: white;
+}
+
+.day {
+    color: #3fc1c9;
+    font-size: 25px;
+    text-align: center;
+}
+
+.month {
+    color: #3fc1c9;
+    font-size: 18px;
+    text-align: center;
+}
 /* ///////////////////////////////////////////////////////////////////////// */
 /* ///////////////////            SEARCH              ////////////////////// */
 /* ///////////////////////////////////////////////////////////////////////// */
@@ -405,6 +534,21 @@ select:-webkit-autofill:focus {
   }
 
   /* ///////////////////////////////////////////////////////////////////////// */
+  /* ///////////////////        REUSABLE                   /////////////////// */
+  /* ///////////////////////////////////////////////////////////////////////// */
+
+.pink { color: #fc5185; }
+.blue { color: #3fc1c9; }
+
+#bluebackground {
+    position: relative;
+    background-color: #3fc1c9;
+    margin-left: 70px;
+}
+
+.inline { display: inline-block; }
+
+/* ///////////////////////////////////////////////////////////////////////// */
 /* ///////////////////        MOBILE FRIENDLY            /////////////////// */
 /* ///////////////////////////////////////////////////////////////////////// */
 

@@ -10,5 +10,6 @@ CREATE TABLE users (
     password VARCHAR(255),
     imgurl VARCHAR(300),
     approvedGoodReads BOOLEAN DEFAULT false,
+    author BOOLEAN DEFAULT false,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

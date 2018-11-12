@@ -10,6 +10,7 @@ class Header extends React.Component {
             menuIsVisible: false
         };
         this.showMenu = this.showMenu.bind(this);
+        this.hideMenu = this.hideMenu.bind(this);
     }
     componentDidMount() {
         this.props.dispatch(getUserInfo());
@@ -30,7 +31,9 @@ class Header extends React.Component {
             <div>
                 <div className="header">
                     <div>
-                        <p className="logo"><i className="logo logohover far fa-bookmark"></i> Authors<span className="pink">In</span>Town</p>
+                        <a href="/" className="no-underline">
+                            <p className="logo no-underline"><i className="logo logohover far fa-bookmark"></i> Authors<span className="pink">In</span>Town</p>
+                        </a>
                     </div>
                     <div className="search-container">
                         <div className="search-bar">

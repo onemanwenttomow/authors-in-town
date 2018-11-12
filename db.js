@@ -21,6 +21,18 @@ exports.insertNewUser = function(first, last, email, hashedPw) {
     return db.query(q, params);
 };
 
+exports.insertNewUserAuthor = function(first, last, email, hashedPw) {
+    const q = `INSERT INTO users (first, last, email, password, imgurl, city, country, author)
+            VALUES ($1, $2, $3, $4, '/img/robots.png', 'London', 'UK', true) RETURNING id`;
+    const params = [
+        first || null,
+        last || null,
+        email || null,
+        hashedPw || null
+    ];
+    return db.query(q, params);
+};
+
 exports.updateUserImage = function(id, imgurl) {
     const q = `UPDATE users SET imgurl = $2 WHERE id = $1 RETURNING imgurl`;
     const params = [id || null, imgurl];
@@ -46,7 +58,7 @@ exports.getHashedPw = function(email){
 };
 
 exports.getUserInfo = function(id) {
-    const q = `SELECT first, last, id, approvedGoodReads, imgurl, city, country FROM users WHERE id = $1`;
+    const q = `SELECT first, last, id, approvedGoodReads, imgurl, city, country, author FROM users WHERE id = $1`;
     const params = [id || null,];
     return db.query(q, params);
 };
@@ -59,5 +71,63 @@ exports.insertNewAuthor = function(name, userid, img, pop, goodreadsid) {
     const q = `INSERT INTO authors (name, user_id, author_pic_url, popularity_ranking, goodreads_id)
             VALUES ($1, $2, $3, $4, $5)`;
     const params = [name || null, userid || null, img || null, pop || null, goodreadsid || null];
+    return db.query(q, params);
+};
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////         EVENTS          ///////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+exports.insertNewEvent = function(userId, name, goodreadsId, eventName, venueName, town, country, eventTime) {
+    const q = `INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`;
+    const params = [
+        userId || null,
+        name || null,
+        goodreadsId || null,
+        eventName || null,
+        venueName || null,
+        town || null,
+        country || null,
+        eventTime || null
+    ];
+    return db.query(q, params);
+};
+
+exports.getAuthorEvents = function(userid) {
+    const query = `
+        SELECT DISTINCT authors.name, author_pic_url, venue_name, event_time, events.id, events.goodreads_id
+        FROM events
+        JOIN authors
+        ON authors.goodreads_id = events.goodreads_id
+        WHERE events.user_id = $1
+    `;
+    const params = [userid || null];
+    return db.query(query, params);
+};
+
+exports.getAuthorById = function(id) {
+    const query = `
+        SELECT name, author_pic_url, goodreads_id
+        FROM authors
+        WHERE goodreads_id = $1
+    `;
+    const params = [id || null];
+    return db.query(query, params);
+};
+
+exports.getAuthorEventsByGoodReadsId = function(goodreadsid) {
+    const q = `
+        SELECT event_name, venue_name, town, country, event_time, id
+        FROM events
+        WHERE goodreads_id = $1
+    `;
+    const params = [goodreadsid || null];
+    return db.query(q, params);
+};
+
+exports.deleteEvent = function(eventId) {
+    const q = `DELETE FROM events WHERE id = $1`;
+    const params = [eventId || null];
     return db.query(q, params);
 };

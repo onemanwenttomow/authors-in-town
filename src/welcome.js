@@ -36,20 +36,26 @@ export function Welcome() {
                     <h1>Welcome to Authors In Town</h1>
                     <p>Carrot cake jelly-o jujubes cotton candy. Pastry halvah biscuit marzipan halvah. Icing toffee jelly-o gingerbread cupcake jelly-o. </p>
                     <ul>
-                        <li>Point 1</li>
-                        <li>Point 2</li>
-                        <li>Point 3</li>
-                        <li>Point 4</li>
+                        <li><i className="fas fa-book welcomeicon"></i> Amazing reason number 1 to sign up</li>
+                        <li><i className="fas fa-book welcomeicon"></i> This point is sooooo good</li>
+                        <li><i className="fas fa-book welcomeicon"></i> Still reading?</li>
+                        <li><i className="fas fa-book welcomeicon"></i> I hope you like Jasper Fforde</li>
                     </ul>
 
-                    <div className="postform">
-                        <Link className="inline right loginlink blue" to="/register">
-                            <button className="btn" >Register</button>
+                    <div className="postform inline">
+                        <Link className="inline loginlink" to="/register">
+                            <button className="btn inline" >Register</button>
+                        </Link>
+                    </div>
+                    <div className="postform inline">
+                        <Link className="inline loginlink bluebackground" to="/register/author">
+                            <button className="btn" id="bluebackground">Author Register</button>
                         </Link>
                     </div>
                 </div>
                 <div>
                     <Route exact path="/register" component={Registration} />
+                    <Route exact path="/register/author" component={Registration} />
                     <Route path="/login" component={Login} />
                 </div>
             </div>

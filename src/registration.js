@@ -12,7 +12,9 @@ export class Registration extends React.Component {
             isSubmitDisabled: true,
             failedValidation: '',
             failedPassValidation: '',
-            failedFirstValidation: ''
+            failedFirstValidation: '',
+            title: 'Register today for free.',
+            isAuthor: false
         };
         this.error;
         this.handleChange = this.handleChange.bind(this);
@@ -20,6 +22,15 @@ export class Registration extends React.Component {
         this.canSubmit = this.canSubmit.bind(this);
         this.formValidation = this.formValidation.bind(this);
         this.samePassword = this.samePassword.bind(this);
+    }
+    componentDidMount() {
+        if (window.location.hash == '#/register/author') {
+            this.setState({
+                title: 'Sign up as an author.',
+                isAuthor: true
+            });
+        }
+
     }
     handleChange(e) {
         this[e.target.name] = e.target.value;
@@ -76,7 +87,8 @@ export class Registration extends React.Component {
             first: first,
             last: last,
             email: email,
-            password: password
+            password: password,
+            isAuthor: this.state.isAuthor
         })
             .then(data => {
                 if (data.data.success) {
@@ -89,7 +101,7 @@ export class Registration extends React.Component {
     render() {
         return (
             <div className="registerform login-container">
-                <h2 className="welcome-message">Register today for free.</h2>
+                <h2 className="welcome-message">{this.state.title}</h2>
                 {this.state.error && <div className="error centre">Please try again, that email might be taken</div>}
                 <label>
                     First Name:

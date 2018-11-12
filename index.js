@@ -88,14 +88,27 @@ if (process.env.NODE_ENV != 'production') {
 app.use(express.static('public'));
 
 app.post('/register', (req, res) => {
-    auth.hashPassword(req.body.password)
-        .then((hash) => {
-            db.insertNewUser(req.body.first, req.body.last, req.body.email, hash)
-                .then((result) => {
-                    req.session.userId = result.rows[0].id;
-                    res.json({ success: true });
-                }).catch(() => {res.json({ success: false });});
-        }).catch(() => {res.json({ success: false });});
+    console.log("req.body: ", req.body);
+    if (req.body.isAuthor) {
+        auth.hashPassword(req.body.password)
+            .then((hash) => {
+                db.insertNewUserAuthor(req.body.first, req.body.last, req.body.email, hash)
+                    .then((result) => {
+                        req.session.userId = result.rows[0].id;
+                        res.json({ success: true });
+                    }).catch(() => {res.json({ success: false });});
+            }).catch(() => {res.json({ success: false });});
+    } else {
+        auth.hashPassword(req.body.password)
+            .then((hash) => {
+                db.insertNewUser(req.body.first, req.body.last, req.body.email, hash)
+                    .then((result) => {
+                        req.session.userId = result.rows[0].id;
+                        res.json({ success: true });
+                    }).catch(() => {res.json({ success: false });});
+            }).catch(() => {res.json({ success: false });});
+    }
+
 });
 
 app.post('/login', (req, res) => {
@@ -125,6 +138,24 @@ app.post('/updatelocation.json', (req, res) => {
         }).catch(err => { console.log(err); });
 });
 
+app.post('/addevent.json', (req, res) => {
+    console.log("req.body: ", req.body);
+    db.insertNewEvent(
+        req.session.userId,
+        req.body.name,
+        req.body.goodreadsid,
+        req.body.eventname,
+        req.body.venue,
+        req.body.town,
+        req.body.country,
+        req.body.eventtime
+    )
+        .then((result) => {
+            console.log(result);
+            res.json({ success: true });
+        }).catch(() => {res.json({ success: false });});
+});
+
 app.get('/welcome', function(req, res) {
     if (req.session.userId) {
         res.redirect('/');
@@ -140,6 +171,36 @@ app.get('/getuserinfo.json', function(req, res) {
                 data: data.rows[0],
                 happyWord: happy.getRandomWord()
             });
+        }).catch(err => { console.log(err); });
+});
+
+app.get('/getauthorsevents.json', function(req, res) {
+    db.getAuthorEvents(req.session.userId)
+        .then(data => {
+            res.json({ data: data.rows });
+        }).catch(err => { console.log(err); });
+});
+
+app.get('/getauthorbyid.json/:id', function(req, res) {
+    console.log("req.params: ", req.params.id);
+    db.getAuthorById(req.params.id)
+        .then(data => {
+            res.json({ data: data.rows[0] });
+        }).catch(err => { console.log(err); });
+});
+
+app.get('/getauthorseventsbyid.json/:id', function(req, res) {
+    console.log("req.params: ", req.params.id);
+    db.getAuthorEventsByGoodReadsId(req.params.id)
+        .then(data => {
+            res.json({ data: data.rows });
+        }).catch(err => { console.log(err); });
+});
+
+app.post('/deleteevent.json', function(req, res) {
+    db.deleteEvent(req.body.eventId)
+        .then(() => {
+            res.json({ success: true });
         }).catch(err => { console.log(err); });
 });
 
@@ -186,7 +247,6 @@ app.get('/token.json', (req, res) => {
                             );
 
                             console.log(uniqueAuthors);
-                            console.log("!!!", req.session.userId);
                             res.json({uniqueAuthors: uniqueAuthors});
                             for (let i = 0; i < uniqueAuthors.length; i++) {
                                 db.insertNewAuthor(
@@ -210,11 +270,12 @@ app.post('/setgoodreadstotrue', (req, res) => {
         }).catch(err => { console.log(err); });
 });
 
-app.get('/testing', (req, res) => {
-    gr.getAuthorInfo(1654)
+app.get('/getauthorbooks.json/:id', (req, res) => {
+    console.log(req.params);
+    gr.getAuthorInfo(req.params.id)
         .then((data) => {
-            console.log(data);
-            res.redirect('/');
+            // console.log(data.books);
+            res.json(data.books);
         }).catch(err => {console.log(err);});
 });
 

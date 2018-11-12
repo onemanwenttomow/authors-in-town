@@ -14,3 +14,19 @@ export async function addLocation(location) {
         location: location
     };
 }
+
+export async function getUserEvents() {
+    const { data } = await axios.get('/getauthorsevents.json');
+    return {
+        type: 'GET_AUTHORS_EVENTS',
+        author_events: data
+    };
+}
+
+export async function getAuthorEventById(id) {
+    const { data } = await axios.get('/getauthorseventsbyid.json/' + id);
+    return {
+        type: 'GET_AUTHOR_EVENTS_BY_ID',
+        author_specific_events: data
+    };
+}
