@@ -26,5 +26,13 @@ export default function(state = {}, action) {
             author_specific_events: action.author_specific_events
         };
     }
+
+    if (action.type == 'GET_USERS_EVENTS') {
+        state = {
+            ...state,
+            user_events: action.user_events
+        };
+    }
+
     return state;
 }

@@ -24,7 +24,7 @@ export function Welcome() {
                 <div className="homepage-hero-module">
                     <div className="video-container">
                         <div className="filter"></div>
-                        <video autoPlay loop className="fillWidth">
+                        <video autoPlay loop className="fillWidth hidescroll">
                             <source src="/videos/Candolim-Beach.jpg" type="video/mp4" />Your browser does not support the video tag. I suggest you upgrade your browser.
                             <source src="/videos/Candolim-Beach.mp4" type="video/webm" />Your browser does not support the video tag. I suggest you upgrade your browser.
                         </video>
@@ -34,7 +34,7 @@ export function Welcome() {
                 </div>
                 <div className="welcome-box">
                     <h1>Welcome to Authors In Town</h1>
-                    <p>Carrot cake jelly-o jujubes cotton candy. Pastry halvah biscuit marzipan halvah. Icing toffee jelly-o gingerbread cupcake jelly-o. </p>
+                    <p>Cookie gummies marshmallow halvah carrot cake. Gingerbread dessert sweet halvah gummi bears gingerbread. Ice cream carrot cake carrot cake candy powder soufflé liquorice chupa chups apple pie. Carrot cake bear claw danish pie fruitcake.  </p>
                     <ul>
                         <li><i className="fas fa-book welcomeicon"></i> Amazing reason number 1 to sign up</li>
                         <li><i className="fas fa-book welcomeicon"></i> This point is sooooo good</li>

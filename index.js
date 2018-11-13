@@ -26,7 +26,6 @@ const myCredentials = {
 const gr = goodreads(myCredentials);
 gr.initOAuth('http://localhost:8080/');
 
-
 const app = express();
 
 const server            = require('http').Server(app);
@@ -88,7 +87,6 @@ if (process.env.NODE_ENV != 'production') {
 app.use(express.static('public'));
 
 app.post('/register', (req, res) => {
-    console.log("req.body: ", req.body);
     if (req.body.isAuthor) {
         auth.hashPassword(req.body.password)
             .then((hash) => {
@@ -139,7 +137,6 @@ app.post('/updatelocation.json', (req, res) => {
 });
 
 app.post('/addevent.json', (req, res) => {
-    console.log("req.body: ", req.body);
     db.insertNewEvent(
         req.session.userId,
         req.body.name,
@@ -182,7 +179,6 @@ app.get('/getauthorsevents.json', function(req, res) {
 });
 
 app.get('/getauthorbyid.json/:id', function(req, res) {
-    console.log("req.params: ", req.params.id);
     db.getAuthorById(req.params.id)
         .then(data => {
             res.json({ data: data.rows[0] });
@@ -190,7 +186,6 @@ app.get('/getauthorbyid.json/:id', function(req, res) {
 });
 
 app.get('/getauthorseventsbyid.json/:id', function(req, res) {
-    console.log("req.params: ", req.params.id);
     db.getAuthorEventsByGoodReadsId(req.params.id)
         .then(data => {
             res.json({ data: data.rows });
@@ -264,20 +259,67 @@ app.get('/token.json', (req, res) => {
 
 app.post('/setgoodreadstotrue', (req, res) => {
     db.updateUserGooReadsStatus(req.session.userId)
-        .then(data => {
-            console.log(data);
+        .then(() => {
             res.json({success: true});
         }).catch(err => { console.log(err); });
 });
 
 app.get('/getauthorbooks.json/:id', (req, res) => {
-    console.log(req.params);
     gr.getAuthorInfo(req.params.id)
         .then((data) => {
-            // console.log(data.books);
             res.json(data.books.book.slice(0,9));
         }).catch(err => {console.log(err);});
 });
+
+app.get('/geteventsbyuserid.json', (req, res) => {
+    db.getPopularAuthorEvents(req.session.userId)
+        .then((data) => {
+            res.json(data.rows);
+        }).catch(err => {console.log(err);});
+});
+
+app.get('/search.json/:q', (req, res) => {
+    db.incrementalSearchQuery(req.params.q)
+        .then(data => {
+            if (data.rows.length == 0 ) {
+                res.json({ data: 'no results', });
+            } else {
+                console.log(data.rows);
+                res.json({
+                    data: data.rows
+                });
+            }
+
+        }).catch(err => { console.log(err); });
+});
+
+app.get('/testingevents', (req, res) => {
+    let token= secrets.thelist;
+    var config = {
+        headers: {'Authorization': "Bearer " + token}
+    };
+    axios.get('https://api.list.co.uk/v1/search?query=signing&page=5', config)
+        .then((response) => {
+            console.log("RES: ", response.data);
+            for (let i = 0; i < response.data.length; i++) {
+                if (response.data[i].tags[0] == 'books') {
+                    db.insertTheListingEvent(
+                        response.data[i].name,
+                        response.data[i].place_name,
+                        response.data[i].town,
+                        response.data[i].start_ts
+                    )
+                        .then((data) => {
+                            console.log(data);
+                        }).catch(err => { console.log(err); });
+                }
+            }
+            res.json(response.data);
+        }).catch((error) => {
+            console.log(error);
+        });
+});
+
 
 app.get('/logout', function(req, res) {
     req.session.userId = null;

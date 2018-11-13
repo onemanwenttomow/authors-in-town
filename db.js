@@ -94,6 +94,32 @@ exports.insertNewEvent = function(userId, name, goodreadsId, eventName, venueNam
     return db.query(q, params);
 };
 
+exports.getCuratedAuthorEvents = function(userid) {
+    const query = `
+        SELECT DISTINCT authors.name, author_pic_url, venue_name, event_time, events.id, events.goodreads_id
+        FROM events
+        JOIN authors
+        ON authors.goodreads_id = events.goodreads_id
+        WHERE authors.user_id = $1
+    `;
+    const params = [userid || null];
+    return db.query(query, params);
+};
+
+exports.getPopularAuthorEvents = function(userid) {
+    const query = `
+        SELECT DISTINCT authors.goodreads_id, author_pic_url, venue_name, event_time, events.id, authors.name, popularity_ranking, town, country
+        FROM events
+        JOIN authors
+        ON authors.goodreads_id = events.goodreads_id
+        WHERE authors.user_id = $1
+        ORDER BY popularity_ranking DESC
+        LIMIT 50
+    `;
+    const params = [userid || null];
+    return db.query(query, params);
+};
+
 exports.getAuthorEvents = function(userid) {
     const query = `
         SELECT DISTINCT authors.name, author_pic_url, venue_name, event_time, events.id, events.goodreads_id
@@ -130,4 +156,34 @@ exports.deleteEvent = function(eventId) {
     const q = `DELETE FROM events WHERE id = $1`;
     const params = [eventId || null];
     return db.query(q, params);
+};
+
+
+exports.insertTheListingEvent = function(name, venueName, town, eventTime) {
+    const q = `INSERT INTO thelistevents (name, event_name, venue_name, town, country, event_time)
+            VALUES ($1, $1, $2, $3, 'UK', $4) RETURNING id`;
+    const params = [
+        name || null,
+        venueName || null,
+        town || null,
+        eventTime || null
+    ];
+    return db.query(q, params);
+};
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////         SEARCH          ///////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+exports.incrementalSearchQuery = function(q) {
+    const query = `
+        SELECT DISTINCT authors.name, author_pic_url, events.goodreads_id
+        FROM events
+        JOIN authors
+        ON authors.goodreads_id = events.goodreads_id
+        WHERE authors.name ILIKE $1
+    `;
+    const params = ['%' + q + '%' || null];
+    return db.query(query, params);
 };

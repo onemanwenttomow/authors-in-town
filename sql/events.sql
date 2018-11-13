@@ -45,3 +45,135 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     'UK',
     '2018-11-19T21:30'
 );
+
+INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+    5,
+    'Tom Holt',
+    '9766',
+    'Super special test event title',
+    'A Lovely Bookshop Berlin',
+    'Berlin',
+    'Germany',
+    '2018-11-22T19:30'
+);
+
+INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+    5,
+    'Tom Holt',
+    '9766',
+    'Super special test event title',
+    'Bookshop Leipzig',
+    'Leipzig',
+    'Germany',
+    '2018-11-23T19:30'
+);
+
+INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+    5,
+    'Robin Hobb',
+    '25307',
+    'Super special test event title',
+    'Bookshop Berlin',
+    'Berlin',
+    'Germany',
+    '2018-11-25T19:30'
+);
+
+INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+    5,
+    'Robin Hobb',
+    '25307',
+    'Super special test event title',
+    'Bookshop Leipzig',
+    'Leipzig',
+    'Germany',
+    '2018-11-26T19:30'
+);
+
+INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+    5,
+    'Neil Gaiman',
+    '1221698',
+    'Super special test event title',
+    'Bookshop Berlin',
+    'Berlin',
+    'Germany',
+    '2018-11-28T19:30'
+);
+
+INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+    5,
+    'Robin Hobb',
+    '1221698',
+    'Super special event with Neil Gaiman',
+    'Bookshop Leipzig',
+    'Leipzig',
+    'Germany',
+    '2018-11-29T19:30'
+);
+
+INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+    5,
+    'Peter F. Hamilton',
+    '25375',
+    'Super special test event title',
+    'Bookshop Berlin',
+    'Berlin',
+    'Germany',
+    '2018-11-29T19:30'
+);
+
+INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+    5,
+    'Peter F. Hamilton',
+    '25375',
+    'Super special event with Peter F. Hamilton',
+    'Bookshop Leipzig',
+    'Leipzig',
+    'Germany',
+    '2018-11-30T19:30'
+);
+
+INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+    5,
+    'N.K. Jemisin',
+    '2917917',
+    'Super special test event title',
+    'Bookshop Berlin',
+    'Berlin',
+    'Germany',
+    '2018-12-01T19:30'
+);
+
+INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+    5,
+    'N.K. Jemisin',
+    '2917917',
+    'Super special event with Peter F. Hamilton',
+    'Bookshop Leipzig',
+    'Leipzig',
+    'Germany',
+    '2018-12-02T19:30'
+);
+
+INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+    5,
+    'Catherynne M. Valente',
+    '338705',
+    'Super special test event title',
+    'Bookshop Berlin',
+    'Berlin',
+    'Germany',
+    '2018-12-01T19:30'
+);
+
+INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+    5,
+    'Catherynne M. Valente',
+    '338705',
+    'Super special event with Peter F. Hamilton',
+    'Bookshop Leipzig',
+    'Leipzig',
+    'Germany',
+    '2018-12-02T19:30'
+);

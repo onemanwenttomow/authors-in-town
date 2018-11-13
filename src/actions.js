@@ -30,3 +30,11 @@ export async function getAuthorEventById(id) {
         author_specific_events: data
     };
 }
+
+export async function getEventsForUser() {
+    const { data } = await axios.get('/geteventsbyuserid.json');
+    return {
+        type: 'GET_USERS_EVENTS',
+        user_events: data
+    };
+}

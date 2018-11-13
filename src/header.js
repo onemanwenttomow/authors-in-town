@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { getUserInfo } from './actions';
 import HeaderMenu from './headermenu';
+import Search from './search';
 
 class Header extends React.Component {
     constructor(props) {
@@ -35,12 +36,7 @@ class Header extends React.Component {
                             <p className="logo no-underline"><i className="logo logohover far fa-bookmark"></i> Authors<span className="pink">In</span>Town</p>
                         </a>
                     </div>
-                    <div className="search-container">
-                        <div className="search-bar">
-                            <i className="fas fa-search search-icon"></i>
-                            <input type="text" id="main-search" ></input>
-                        </div>
-                    </div>
+                    <Search/>
 
                     <div className="user-header">
                         <img className="profile-pic" onClick={this.showMenu} src={this.props.userInfo.data.imgurl} alt="user profile pic"></img>

@@ -17,6 +17,11 @@ h2 {
     font-size: 24px;
 }
 
+a {
+    text-decoration: none;
+    color: #364f6b;
+}
+
 img { object-fit: cover; }
 
 ul {
@@ -49,6 +54,7 @@ ul, li { /* reset the margin and padding */
 
 .main-container-flex {
     width: 100%;
+    /* height: 100vh; */
     max-width: 1050px;
     margin-top: 10px;
     background-color: white;
@@ -93,7 +99,6 @@ ul, li { /* reset the margin and padding */
     justify-content: space-between;
     border-bottom: 1px solid #EBEBEB;
     background-color: white;
-    overflow: hidden;
 }
 
 .user-header {
@@ -157,6 +162,18 @@ ul, li { /* reset the margin and padding */
     padding: 0;
 }
 
+/* ///////////////////////////////////////////////////////////////////////// */
+/* ///////////////////         MAIN EVENTS PAGE       ////////////////////// */
+/* ///////////////////////////////////////////////////////////////////////// */
+
+.main-events-container {
+    height: 320px;
+    width: 95%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
 
 /* ///////////////////////////////////////////////////////////////////////// */
 /* ///////////////////         AUTHOR PROFILE         ////////////////////// */
@@ -181,9 +198,8 @@ ul, li { /* reset the margin and padding */
 }
 
 .book {
-    /* position: relative; */
     width: 80px;
-    height: 140px;
+    height: 80px;
     margin: 0;
     top: 0;
     display: inline-block;
@@ -201,7 +217,6 @@ ul, li { /* reset the margin and padding */
     height: 100%;
     display: flex;
     flex-wrap: wrap;
-    /* overflow-y: scroll; */
 }
 
 h5 {
@@ -233,11 +248,15 @@ h5 {
 
 .authorname {
     margin: 5px 0 5px 10px;
+    white-space: normal;
+    text-decoration: none;
 }
 
 .eventlocation {
     margin-left: 10px;
     font-weight: bold;
+    white-space: normal;
+    text-decoration: none;
 }
 
 .datebox {
@@ -330,6 +349,34 @@ input[type="datetime-local"]:hover {
     color: #8f8f8f;
 }
 
+.search-results {
+    position: absolute;
+    width: 34.9vw;
+    background-color: white;
+    z-index: 2000;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-right: 1px solid #cdcdcd;
+    border-left: 1px solid #cdcdcd;
+    border-bottom: 1px solid #cdcdcd;
+}
+
+.search-results-image {
+    height: 50px;
+    width: 50px;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.search-name {
+    position: absolute;
+    margin-top: 15px;
+}
+
+.single-search-result {
+    padding-top: 15px;
+}
+
 
 /* ///////////////////////////////////////////////////////////////////////// */
 /* ///////////////////            WELCOME             ////////////////////// */
@@ -369,6 +416,10 @@ input[type="datetime-local"]:hover {
     -ms-overflow-style: none;  // IE 10+
     overflow: -moz-scrollbars-none;  // Firefox
 
+}
+
+.hidescroll {
+    overflow-y: hidden;
 }
 
 /* ///////////////////////////////////////////////////////////////////////// */
