@@ -153,6 +153,46 @@ app.post('/updatelocation.json', (req, res) => {
         }).catch(err => { console.log(err); });
 });
 
+app.post('/updateprofile', (req, res) => {
+    console.log("Old pass: ", req.body.oldpassword);
+    console.log("Old pass: ", req.body.password);
+    if (req.body.password == '') {
+        db.updateUserProfile(
+            req.session.userId,
+            req.body.first,
+            req.body.last,
+            req.body.email
+        )
+            .then(() => {
+                res.json({ success: true });
+            }).catch((err) => {
+                res.json({ success: false });
+                console.log(err);
+            });
+    } else {
+        checkPass.checkUserPassword(req.body.email, req.body.oldpassword)
+            .then((data) => {
+                if (data) {
+                    auth.hashPassword(req.body.password)
+                        .then((hash) => {
+                            db.updateUserProfileAndPass(
+                                req.session.userId,
+                                req.body.first,
+                                req.body.last,
+                                req.body.email,
+                                hash,
+                            )
+                                .then(() => {
+                                    res.json({ success: true });
+                                }).catch((err) => { console.log(err); });
+                        }).catch((err) => {console.log(err);});
+                } else {
+                    res.json({ success: false });
+                }
+            }).catch(() => {res.json({ success: false });});
+    }
+});
+
 app.post('/addevent.json', (req, res) => {
     db.insertNewEvent(
         req.session.userId,

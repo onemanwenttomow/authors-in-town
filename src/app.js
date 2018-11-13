@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getUserInfo } from './actions';
 import Header from './header';
+import EditProfile from './editprofile';
 import MainEvents from './mainevents';
 import Author from './author';
 
@@ -37,6 +38,7 @@ class App extends React.Component {
                                     <Author {...props} key={props.match.url} />
                                 )}
                             />
+                            <Route exact path="/editprofile" component = { EditProfile }/>
                             <Route exact path="/" component = { MainEvents } />
                         </ Switch>
                     </div>

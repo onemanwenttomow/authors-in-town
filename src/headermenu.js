@@ -36,7 +36,9 @@ class HeaderMenu extends React.Component {
                     <p>Hello {this.props.userInfo.data.first}, you are <span className="pink">{this.props.userInfo.happyWord}</span></p>
                 </div>
                 <div className="menu-item">
-                    <p>Edit Profile</p>
+                    <Link to="/editprofile">
+                        <p>Edit Profile</p>
+                    </Link>
                 </div>
                 <div className="menu-item">
                     <p>

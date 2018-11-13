@@ -58,8 +58,31 @@ exports.getHashedPw = function(email){
 };
 
 exports.getUserInfo = function(id) {
-    const q = `SELECT first, last, id, approvedGoodReads, imgurl, city, country, author FROM users WHERE id = $1`;
+    const q = `SELECT first, last, id, approvedGoodReads, email, imgurl, city, country, author FROM users WHERE id = $1`;
     const params = [id || null,];
+    return db.query(q, params);
+};
+
+exports.updateUserProfile = function(id, first, last, email) {
+    const q = `UPDATE users
+        SET first = $2,
+        last = $3,
+        email = $4
+        WHERE id = $1
+        RETURNING id`;
+    const params = [id || null, first || null, last || null, email || null];
+    return db.query(q, params);
+};
+
+exports.updateUserProfileAndPass = function(id, first, last, email, hash) {
+    const q = `UPDATE users
+        SET first = $2,
+        last = $3,
+        email = $4,
+        password = $5
+        WHERE id = $1
+        RETURNING id`;
+    const params = [id || null, first || null, last || null, email || null, hash];
     return db.query(q, params);
 };
 
