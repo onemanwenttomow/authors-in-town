@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { } from './actions';
 import axios from './axios';
@@ -46,12 +47,12 @@ class Search extends React.Component {
                         { this.state.searchResultsArr.map(
                             result => (
                                 <div className="single-search-result" key={result.goodreads_id}>
-                                    <a href={`/author/${result.goodreads_id}`} >
+                                    <Link to={`/author/${result.goodreads_id}`} >
                                         <div>
                                             <img className="search-results-image" src={result.author_pic_url} alt={result.name}/>
                                             <h3 className="blue authorname inline search-name">{result.name}</h3>
                                         </div>
-                                    </a>
+                                    </Link>
                                 </div>
                             )
                         )}

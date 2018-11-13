@@ -17,16 +17,10 @@ const happy             = require('./happy.js');
 const s3                = require('./s3.js');
 const s3url             = require('./config.json');
 const secrets           = require('./secrets');
-const redis             = require('redis');
+const redis             = require('./redis');
+const session           = require('express-session');
+const Store             = require('connect-redis')(session);
 
-const client = redis.createClient({
-    host: 'localhost',
-    port: 6379
-});
-
-client.on('error', function(err) {
-    console.log(err);
-});
 
 const myCredentials = {
     key: secrets.key,
@@ -42,6 +36,8 @@ const server            = require('http').Server(app);
 const io                = require('socket.io')(server, { origins: 'localhost:8080' });
 
 app.use(compression());
+
+
 
 const diskStorage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -95,6 +91,17 @@ if (process.env.NODE_ENV != 'production') {
 }
 
 app.use(express.static('public'));
+
+app.use(session({
+    store: new Store({
+        ttl: 3600, //1 hour
+        host: 'localhost',
+        port: 6379
+    }),
+    resave: false,
+    saveUninitialized: true,
+    secret: secrets.redis_secret
+}));
 
 app.post('/register', (req, res) => {
     if (req.body.isAuthor) {
@@ -275,10 +282,25 @@ app.post('/setgoodreadstotrue', (req, res) => {
 });
 
 app.get('/getauthorbooks.json/:id', (req, res) => {
-    gr.getAuthorInfo(req.params.id)
+    redis.get(req.params.id)
         .then((data) => {
-            res.json(data.books.book.slice(0,9));
-        }).catch(err => {console.log(err);});
+            if (data) {
+                console.log("rendered from REDIS!!");
+                res.json(JSON.parse(data));
+            } else {
+                gr.getAuthorInfo(req.params.id)
+                    .then((data) => {
+                        let stringifyedData = JSON.stringify(data.books.book.slice(0,9));
+                        redis.setex(req.params.id, 60 * 60 * 2, stringifyedData)
+                            .then(() => {
+                                return redis.get(req.params.id);
+                            }).then(() => {
+                                console.log("rendered from POSGRES");
+                                res.json(data.books.book.slice(0,9));
+                            });
+                    }).catch(err => {console.log(err);});
+            }
+        });
 });
 
 app.get('/geteventsbyuserid.json', (req, res) => {

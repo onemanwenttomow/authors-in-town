@@ -27,17 +27,19 @@ class App extends React.Component {
         }
         return (
             <div>
-                <Header />
                 <BrowserRouter>
-                    <Switch>
-                        <Route
-                            path="/author/:id"
-                            render={props => (
-                                <Author {...props} key={props.match.url} />
-                            )}
-                        />
-                        <Route exact path="/" component = { MainEvents } />
-                    </ Switch>
+                    <div>
+                        <Header />
+                        <Switch>
+                            <Route
+                                path="/author/:id"
+                                render={props => (
+                                    <Author {...props} key={props.match.url} />
+                                )}
+                            />
+                            <Route exact path="/" component = { MainEvents } />
+                        </ Switch>
+                    </div>
                 </BrowserRouter>
             </div>
 

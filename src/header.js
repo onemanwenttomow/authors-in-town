@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getUserInfo } from './actions';
 import HeaderMenu from './headermenu';
@@ -32,9 +33,9 @@ class Header extends React.Component {
             <div>
                 <div className="header">
                     <div>
-                        <a href="/" className="no-underline">
+                        <Link to="/" className="no-underline">
                             <p className="logo no-underline"><i className="logo logohover far fa-bookmark"></i> Authors<span className="pink">In</span>Town</p>
-                        </a>
+                        </Link>
                     </div>
                     <Search/>
 
