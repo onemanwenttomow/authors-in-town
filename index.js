@@ -17,6 +17,16 @@ const happy             = require('./happy.js');
 const s3                = require('./s3.js');
 const s3url             = require('./config.json');
 const secrets           = require('./secrets');
+const redis             = require('redis');
+
+const client = redis.createClient({
+    host: 'localhost',
+    port: 6379
+});
+
+client.on('error', function(err) {
+    console.log(err);
+});
 
 const myCredentials = {
     key: secrets.key,
@@ -314,6 +324,15 @@ app.get('/testingevents', (req, res) => {
                         }).catch(err => { console.log(err); });
                 }
             }
+            res.json(response.data);
+        }).catch((error) => {
+            console.log(error);
+        });
+});
+
+app.get('/eventbrite', (req, res) => {
+    axios.get('https://www.eventbriteapi.com/v3/events/search/?q=waterstones&location.address=gb&token=2SEOR22VPGMINMOYPLBO')
+        .then((response) => {
             res.json(response.data);
         }).catch((error) => {
             console.log(error);
