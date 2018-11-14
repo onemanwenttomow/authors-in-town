@@ -23,7 +23,7 @@ exports.insertNewUser = function(first, last, email, hashedPw) {
 
 exports.insertNewUserAuthor = function(first, last, email, hashedPw) {
     const q = `INSERT INTO users (first, last, email, password, imgurl, city, country, author)
-            VALUES ($1, $2, $3, $4, '/img/robots.png', 'London', 'UK', true) RETURNING id`;
+            VALUES ($1, $2, $3, $4, '/img/robots.png', 'Berlin', 'Germany', true) RETURNING id`;
     const params = [
         first || null,
         last || null,
@@ -241,11 +241,13 @@ exports.getAuthorNamesFromGoodReadsTable = function() {
 
 exports.incrementalSearchQuery = function(q) {
     const query = `
-        SELECT DISTINCT authors.name, author_pic_url, goodreadsevents.goodreads_id
+        SELECT DISTINCT authors.name, author_pic_url, authors.popularity_ranking, goodreadsevents.goodreads_id
         FROM goodreadsevents
         JOIN authors
         ON authors.goodreads_id = goodreadsevents.goodreads_id
         WHERE authors.name ILIKE $1
+        ORDER BY authors.popularity_ranking
+        LIMIT 8
     `;
     const params = ['%' + q + '%' || null];
     return db.query(query, params);

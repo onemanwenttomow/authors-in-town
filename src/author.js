@@ -98,6 +98,7 @@ class Author extends React.Component {
                 </div>
             );
         } else {
+            console.log("this state books", this.state.books);
             return (
                 <div className="main-container-flex">
                     <div className="author-profile">
@@ -107,7 +108,7 @@ class Author extends React.Component {
                         <div className="books">
                             { this.state.books.map(
                                 book => (
-                                    <div className="book" key={book.isbn}>
+                                    <div className="book" key={book.id._}>
 
                                         <a href={book.link}>
                                             <img className="bookimage inline" src={book.image_url} alt={book.title_without_series}/>

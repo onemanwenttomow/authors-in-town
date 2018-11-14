@@ -66,6 +66,19 @@ ul, li { /* reset the margin and padding */
     justify-content: space-between;
 }
 
+.main-container-flex-around {
+    width: 100%;
+    /* height: 100vh; */
+    max-width: 1050px;
+    margin-top: 10px;
+    background-color: white;
+    margin: 10px auto;
+    border-radius: 4px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+
 
 /* ///////////////////////////////////////////////////////////////////////// */
 /* ///////////////////            HEADER              ////////////////////// */
@@ -304,6 +317,25 @@ input[type="datetime-local"]:hover {
 
 .add-a-event-title {
     padding-left: 5px;
+}
+
+.alleventsphoto {
+    height: 60px;
+    width: 60px;
+    margin-right: 20px;
+}
+
+.alleventsdate {
+    position: relative;
+    top: -10px;
+}
+
+.alleventsarea {
+    width: 90%;
+}
+
+.alleventslocation {
+    width: 600px;
 }
 
 /* ///////////////////////////////////////////////////////////////////////// */

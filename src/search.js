@@ -7,8 +7,11 @@ import axios from './axios';
 class Search extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            searchHidden: true
+        };
         this.handleSearchInput = this.handleSearchInput.bind(this);
+        this.hideSearchOnclick = this.hideSearchOnclick.bind(this);
     }
     componentDidMount() {
         console.log("search mounted");
@@ -17,17 +20,37 @@ class Search extends React.Component {
 
     handleSearchInput(e) {
         let query = e.target.value;
-
+        if (query == '') {
+            this.setState({
+                searchResultsArr: [],
+                searchHidden: true
+            });
+            return;
+        }
+        this.setState({
+            searchHidden: false
+        });
         axios.get('/search.json/' + query)
             .then(data => {
                 console.log("search results: ", data);
-                this.setState({ searchResultsArr: data.data.data });
+                this.setState({ searchResultsArr: data.data.data.filter(
+                    (thing, index, self) =>
+                        index === self.findIndex((t) => (
+                            t.name === thing.name
+                        ))) });
             }).catch(err => { console.log(err); });
     }
 
+    hideSearchOnclick() {
+        console.log("clicked");
+        this.setState({
+            searchHidden: true
+        });
+    }
+
     render() {
-        console.log(this.state.searchResultsArr);
-        if (this.state.searchResultsArr == undefined || this.state.searchResultsArr == 'no results' ) {
+        console.log("state in search: ", this.state.searchHidden);
+        if (this.state.searchHidden || this.state.searchResultsArr == undefined || this.state.searchResultsArr == 'no results' ) {
             return (
                 <div className="search-container">
                     <div className="search-bar">
@@ -46,13 +69,13 @@ class Search extends React.Component {
                     <div className="search-results">
                         { this.state.searchResultsArr.map(
                             result => (
-                                <div className="single-search-result" key={result.goodreads_id}>
-                                    <Link to={`/author/${result.goodreads_id}`} >
+                                <div onClick={this.state.hideSearchOnclick} className="single-search-result" key={result.goodreads_id}>
+                                    <a href={`/author/${result.goodreads_id}`} >
                                         <div>
                                             <img className="search-results-image" src={result.author_pic_url} alt={result.name}/>
                                             <h3 className="blue authorname inline search-name">{result.name}</h3>
                                         </div>
-                                    </Link>
+                                    </a>
                                 </div>
                             )
                         )}
