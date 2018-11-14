@@ -102,7 +102,7 @@ exports.insertNewAuthor = function(name, userid, img, pop, goodreadsid) {
 ////////////////////////////////////////////////////////////////////////////////
 
 exports.insertNewEvent = function(userId, name, goodreadsId, eventName, venueName, town, country, eventTime) {
-    const q = `INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time)
+    const q = `INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time)
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`;
     const params = [
         userId || null,
@@ -119,10 +119,10 @@ exports.insertNewEvent = function(userId, name, goodreadsId, eventName, venueNam
 
 exports.getCuratedAuthorEvents = function(userid) {
     const query = `
-        SELECT DISTINCT authors.name, author_pic_url, venue_name, event_time, events.id, events.goodreads_id
-        FROM events
+        SELECT DISTINCT authors.name, author_pic_url, venue_name, event_time, goodreadsevents.id, goodreadsevents.goodreads_id
+        FROM goodreadsevents
         JOIN authors
-        ON authors.goodreads_id = events.goodreads_id
+        ON authors.goodreads_id = goodreadsevents.goodreads_id
         WHERE authors.user_id = $1
     `;
     const params = [userid || null];
@@ -131,13 +131,13 @@ exports.getCuratedAuthorEvents = function(userid) {
 
 exports.getPopularAuthorEvents = function(userid) {
     const query = `
-        SELECT DISTINCT authors.goodreads_id, author_pic_url, venue_name, event_time, events.id, authors.name, popularity_ranking, town, country
-        FROM events
+        SELECT DISTINCT authors.goodreads_id, author_pic_url, venue_name, event_time, goodreadsevents.id, authors.name, popularity_ranking, town, country
+        FROM goodreadsevents
         JOIN authors
-        ON authors.goodreads_id = events.goodreads_id
+        ON authors.goodreads_id = goodreadsevents.goodreads_id
         WHERE authors.user_id = $1
         ORDER BY popularity_ranking DESC
-        LIMIT 50
+        LIMIT 200
     `;
     const params = [userid || null];
     return db.query(query, params);
@@ -145,11 +145,11 @@ exports.getPopularAuthorEvents = function(userid) {
 
 exports.getAuthorEvents = function(userid) {
     const query = `
-        SELECT DISTINCT authors.name, author_pic_url, venue_name, event_time, events.id, events.goodreads_id
-        FROM events
+        SELECT DISTINCT authors.name, author_pic_url, venue_name, event_time, goodreadsevents.id, goodreadsevents.goodreads_id
+        FROM goodreadsevents
         JOIN authors
-        ON authors.goodreads_id = events.goodreads_id
-        WHERE events.user_id = $1
+        ON authors.goodreads_id = goodreadsevents.goodreads_id
+        WHERE goodreadsevents.user_id = $1
     `;
     const params = [userid || null];
     return db.query(query, params);
@@ -168,7 +168,7 @@ exports.getAuthorById = function(id) {
 exports.getAuthorEventsByGoodReadsId = function(goodreadsid) {
     const q = `
         SELECT event_name, venue_name, town, country, event_time, id
-        FROM events
+        FROM goodreadsevents
         WHERE goodreads_id = $1
     `;
     const params = [goodreadsid || null];
@@ -176,7 +176,7 @@ exports.getAuthorEventsByGoodReadsId = function(goodreadsid) {
 };
 
 exports.deleteEvent = function(eventId) {
-    const q = `DELETE FROM events WHERE id = $1`;
+    const q = `DELETE FROM goodreadsevents WHERE id = $1`;
     const params = [eventId || null];
     return db.query(q, params);
 };
@@ -241,10 +241,10 @@ exports.getAuthorNamesFromGoodReadsTable = function() {
 
 exports.incrementalSearchQuery = function(q) {
     const query = `
-        SELECT DISTINCT authors.name, author_pic_url, events.goodreads_id
-        FROM events
+        SELECT DISTINCT authors.name, author_pic_url, goodreadsevents.goodreads_id
+        FROM goodreadsevents
         JOIN authors
-        ON authors.goodreads_id = events.goodreads_id
+        ON authors.goodreads_id = goodreadsevents.goodreads_id
         WHERE authors.name ILIKE $1
     `;
     const params = ['%' + q + '%' || null];

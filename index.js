@@ -407,14 +407,16 @@ app.get('/goodreadsevents/:countrycode', (req, res) => {
     // let countryCode = '';
     let countryCode = req.params.countrycode.toUpperCase();
     console.log(countryCode);
-    let country ='New Zealand';
     axios.get(`https://www.goodreads.com/event/index.xml?key=HYVXXW6GnQ5MwI3g8fjw&search[country_code]=${countryCode}`)
         .then((data) => {
             let xml = data.data;
             let result1 = convert.xml2json(xml, {compact: true, spaces: 4});
             let obj = JSON.parse(result1);
-            // console.log("testing length: ", obj.GoodreadsResponse.events.event[3].resource_id._attributes);
-            // console.log("testing length2: ", obj.GoodreadsResponse.events.event.length);
+            console.log(obj.GoodreadsResponse.query.country._text);
+            let country = obj.GoodreadsResponse.query.country._text;
+            // let country = 'USA'
+            console.log("testing length: ", obj.GoodreadsResponse.events.event[3].resource_id._attributes);
+            console.log("testing length2: ", obj.GoodreadsResponse.events.event.length);
             for (let i = 0; i < obj.GoodreadsResponse.events.event.length; i++) {
                 if (obj.GoodreadsResponse.events.event[i].city._text != undefined) {
                     console.log("there is a city");

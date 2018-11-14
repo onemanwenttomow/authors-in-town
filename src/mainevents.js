@@ -60,7 +60,28 @@ class MainEvents extends React.Component {
                         )
                     )}
                 </div>
-                <h2>Events by Authors you like outside of  <span className="blue">{this.props.userInfo.data.city}</span></h2>
+                <h2>Events by Authors you like in <span className="blue">{this.props.userInfo.data.country}</span> outside of  <span className="blue">{this.props.userInfo.data.city}</span></h2>
+                <div className="main-events-container">
+                    { this.props.countryEvents.map(
+                        event => (
+                            <div className="event" key={event.id}>
+                                <Link to={`/author/${event.goodreads_id}`} >
+                                    <div>
+                                        <img className="eventphoto" src={event.author_pic_url} alt={event.name}/>
+                                        <div className="datebox">
+                                            <div className="day"> {event.event_time.split('-')[2].substring(0,2)} </div>
+                                            <div className="month"> {event.event_time.split('-')[1]} </div>
+                                        </div>
+                                        <h3 className="blue authorname">{event.name}</h3>
+                                        <p className="eventlocation">{event.venue_name}</p>
+                                    </div>
+                                </Link>
+
+                            </div>
+                        )
+                    )}
+                </div>
+                <h2>Events by Authors you like in outside of <span className="blue">{this.props.userInfo.data.country}</span></h2>
                 <div className="main-events-container">
                     { this.props.otherevents.map(
                         event => (
@@ -94,9 +115,17 @@ const mapStateToProps = function(state) {
         userInfo: state.user_info,
         loaction: state.location,
         userEvents: state.user_events,
-        otherevents: state.user_events && state.user_events.filter(
-            event => event.town != state.user_info.data.city
+        countryEvents: state.user_events && state.user_events.filter(
+            event => event.country == state.user_info.data.country && event.town != state.user_info.data.city
         ).reverse().filter(
+            (thing, index, self) =>
+                index === self.findIndex((t) => (
+                    t.goodreads_id === thing.goodreads_id
+                ))
+        ),
+        otherevents: state.user_events && state.user_events.filter(
+            event => event.town != state.user_info.data.city && event.country != state.user_info.data.country
+        ).reverse().slice(0,12).filter(
             (thing, index, self) =>
                 index === self.findIndex((t) => (
                     t.goodreads_id === thing.goodreads_id
