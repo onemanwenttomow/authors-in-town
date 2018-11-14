@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getUserInfo } from './actions';
+import { getUserInfo, addLocation } from './actions';
 import axios from './axios';
 
 
@@ -14,12 +14,16 @@ class GetFavAuthors extends React.Component {
             verifybuttontext: 'Click here to verify',
             getauthorsbuttontext: 'Click here to get authors',
             verifysuccessauthors: '',
+            getlocationbuttontext: 'Get Location',
+            getLocationButtonDisabled: false,
+            verifylocation: '',
             spinner: '',
             spinner2: ''
         };
         this.verifygoodreads = this.verifygoodreads.bind(this);
         this.getauthors = this.getauthors.bind(this);
         this.setGoodReadsToTrue = this.setGoodReadsToTrue.bind(this);
+        this.getUserLocation = this.getUserLocation.bind(this);
     }
     componentDidMount() {
         this.props.dispatch(getUserInfo());
@@ -73,6 +77,34 @@ class GetFavAuthors extends React.Component {
                 location.replace('/');
             }).catch(err => { console.log(err); });
     }
+    getUserLocation() {
+        console.log("clicked!!");
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                axios.get(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
+                    .then(data => {
+                        console.log("made it to results");
+                        let locationData = {
+                            city: data.data.address.city,
+                            country: data.data.address.country
+                        };
+                        this.props.dispatch(addLocation(locationData));
+                        axios.post('/updatelocation.json', (locationData))
+                            .then(() => {
+                                this.setState({
+                                    getlocationbuttontext: 'Success',
+                                    getLocationButtonDisabled: true,
+                                    verifylocation: 'verifysuccess'
+                                });
+                            }).catch(err => { console.log(err); });
+                    }).catch(err => { console.log(err); });
+            });
+        } else {
+            console.log("made it to the else");
+            return;
+        }
+
+    }
     render() {
         if (!this.props.userInfo) {
             return null;
@@ -102,7 +134,9 @@ class GetFavAuthors extends React.Component {
                     <button disabled={this.state.verifyButtonDisabled} onClick={this.verifygoodreads} className={'btn ' + this.state.verifysuccess} >{this.state.verifybuttontext}</button>
                     <h2>Step 2: Click here to import your favourite GoodReads authors  </h2>
                     <button disabled={this.state.getAuthorsButtonDisabled} onClick={this.getauthors} className={'btn ' + this.state.verifysuccessauthors} >{this.state.getauthorsbuttontext}</button>
-                    <h2>Step 3: You are ready to use the site</h2>
+                    <h2>Step 3: Let us know your location.</h2>
+                    <button disabled={this.state.getLocationButtonDisabled} onClick={this.getUserLocation} className={'btn ' + this.state.verifylocation} >{this.state.getlocationbuttontext}</button>
+                    <h2>Step 4: You are ready to use the site</h2>
                     <button className="btn" onClick={this.setGoodReadsToTrue}>Find events for your authors</button>
                 </div>
             );

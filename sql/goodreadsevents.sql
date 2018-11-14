@@ -1,11 +1,11 @@
-DROP TABLE IF EXISTS events;
+DROP TABLE IF EXISTS goodreadsevents;
 
-CREATE TABLE events (
+CREATE TABLE goodreadsevents (
     id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL,
-    name VARCHAR(200) NOT NULL,
-    goodreads_id VARCHAR(100) NOT NULL,
-    event_name VARCHAR(200) NOT NULL,
+    user_id INT DEFAULT 1,
+    name VARCHAR(300) ,
+    goodreads_id VARCHAR(100),
+    event_name VARCHAR(300) NOT NULL,
     venue_name VARCHAR(200) NOT NULL,
     town VARCHAR(255) NOT NULL,
     country VARCHAR(200) NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE events (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     4,
     'Jaspar FForde',
     '4432',
@@ -24,7 +24,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2018-11-17T21:30'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     4,
     'Jaspar FForde',
     '4432',
@@ -35,7 +35,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2018-11-18T21:30'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     4,
     'Jaspar FForde',
     '4432',
@@ -46,7 +46,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2018-11-19T21:30'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     5,
     'Tom Holt',
     '9766',
@@ -57,7 +57,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2018-11-22T19:30'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     5,
     'Tom Holt',
     '9766',
@@ -68,7 +68,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2018-11-23T19:30'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     5,
     'Robin Hobb',
     '25307',
@@ -79,7 +79,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2018-11-25T19:30'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     5,
     'Robin Hobb',
     '25307',
@@ -90,7 +90,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2018-11-26T19:30'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     5,
     'Neil Gaiman',
     '1221698',
@@ -101,7 +101,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2018-11-28T19:30'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     5,
     'Robin Hobb',
     '1221698',
@@ -112,7 +112,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2018-11-29T19:30'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     5,
     'Peter F. Hamilton',
     '25375',
@@ -123,7 +123,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2018-11-29T19:30'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     5,
     'Peter F. Hamilton',
     '25375',
@@ -134,7 +134,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2018-11-30T19:30'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     5,
     'N.K. Jemisin',
     '2917917',
@@ -145,7 +145,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2018-12-01T19:30'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     5,
     'N.K. Jemisin',
     '2917917',
@@ -156,7 +156,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2018-12-02T19:30'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     5,
     'Catherynne M. Valente',
     '338705',
@@ -167,7 +167,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2018-12-01T19:30'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     5,
     'Catherynne M. Valente',
     '338705',
@@ -178,7 +178,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2018-12-02T19:30'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     4,
     'Jaspar FForde',
     '4432',
@@ -189,7 +189,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2019-01-16T19:00'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     4,
     'Jaspar FForde',
     '4432',
@@ -200,7 +200,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2019-02-18T19:00'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     4,
     'Jaspar FForde',
     '4432',
@@ -211,7 +211,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2019-02-19T19:00'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     4,
     'Jaspar FForde',
     '4432',
@@ -222,7 +222,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2019-02-20T19:00'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     4,
     'Jaspar FForde',
     '4432',
@@ -233,7 +233,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2019-02-21T18:30'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     4,
     'Jaspar FForde',
     '4432',
@@ -244,7 +244,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2019-02-22T19:00'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     4,
     'Jaspar FForde',
     '4432',
@@ -255,7 +255,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2019-02-24T18:00'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     4,
     'Jaspar FForde',
     '4432',
@@ -266,7 +266,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     '2019-02-25T19:00'
 );
 
-INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
+INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
     4,
     'Jaspar FForde',
     '4432',

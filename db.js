@@ -194,6 +194,46 @@ exports.insertTheListingEvent = function(name, venueName, town, eventTime) {
     return db.query(q, params);
 };
 
+exports.insertGoodReadsEvent = function(name, goodreadsId, eventName, venueName, town, country, eventTime) {
+    const q = `INSERT INTO goodreadsevents (name, goodreads_id, event_name, venue_name, town, country, event_time)
+            VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`;
+    const params = [
+        name || null,
+        goodreadsId || null,
+        eventName || null,
+        venueName || null,
+        town || null,
+        country || null,
+        eventTime || null
+    ];
+    return db.query(q, params);
+};
+
+
+exports.getAuthorNamesFromGoodReadsTable = function() {
+    const q = `SELECT name, goodreads_id FROM goodreadsevents`;
+    const params = [];
+    return db.query(q, params);
+};
+
+
+// exports.insertGoodReadsEvent = function(name, goodreadsId, eventName, venueName, town, country, eventTime) {
+//     const q = `INSERT INTO goodreadsevents (name, goodreads_id, event_name, venue_name, town, country, event_time)
+//             VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`;
+//     const params = [
+//         name || null,
+//         goodreadsId || null,
+//         eventName || null,
+//         venueName || null,
+//         town || null,
+//         country || null,
+//         eventTime || null
+//     ];
+//     return db.query(q, params);
+// };
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////         SEARCH          ///////////////////////////////

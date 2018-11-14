@@ -35,6 +35,7 @@ ul, li { /* reset the margin and padding */
 
 .welcomeicon {
     padding-right: 5px;
+    font-size: 20px;
 }
 
 .no-underline { text-decoration: none; }
@@ -199,7 +200,6 @@ ul, li { /* reset the margin and padding */
 
 .book {
     width: 80px;
-    height: 80px;
     margin: 0;
     top: 0;
     display: inline-block;
@@ -214,7 +214,6 @@ ul, li { /* reset the margin and padding */
 
 .books {
     width: 270px;
-    height: 100%;
     display: flex;
     flex-wrap: wrap;
 }

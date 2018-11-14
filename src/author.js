@@ -35,6 +35,7 @@ class Author extends React.Component {
         if (!this.state.name) {
             return null;
         }
+        console.log(this.props);
         if (!this.props.otherevents) {
             return (
                 <div className="main-container-flex">
@@ -67,7 +68,7 @@ class Author extends React.Component {
                                             <div className="month"> {event.event_time.split('-')[1]} </div>
                                         </div>
                                         <h3 className="blue inline">{this.state.name}</h3>
-                                        <p className="inline">{event.venue_name}</p>
+                                        <p className="inline">{event.venue_name}, {event.town}</p>
                                         <div>
                                             <button className="btn inline" >Get Tickets</button>
                                         </div>
@@ -83,7 +84,7 @@ class Author extends React.Component {
                                             <div className="month"> {event.event_time.split('-')[1]} </div>
                                         </div>
                                         <h3 className="blue inline extrapadding">{this.state.name}</h3>
-                                        <p className="inline">{event.venue_name}</p>
+                                        <p className="inline">{event.venue_name}, {event.town}</p>
                                         <div>
                                             <button className="btn inline" >Get Tickets</button>
                                         </div>
@@ -130,7 +131,7 @@ class Author extends React.Component {
                                             <div className="month"> {event.event_time.split('-')[1]} </div>
                                         </div>
                                         <h3 className="blue inline">{this.state.name}</h3>
-                                        <p className="inline">{event.venue_name}</p>
+                                        <p className="inline">{event.venue_name}, {event.town}</p>
                                         <div>
                                             <button className="btn inline" >Get Tickets</button>
                                         </div>
@@ -146,7 +147,7 @@ class Author extends React.Component {
                                             <div className="month"> {event.event_time.split('-')[1]} </div>
                                         </div>
                                         <h3 className="blue inline extrapadding">{this.state.name}</h3>
-                                        <p className="inline">{event.venue_name}</p>
+                                        <p className="inline">{event.venue_name}, {event.town}</p>
                                         <div>
                                             <button className="btn inline" >Get Tickets</button>
                                         </div>

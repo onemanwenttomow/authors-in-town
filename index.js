@@ -9,6 +9,8 @@ const path              = require('path');
 const axios             = require('axios');
 const url               = require('url');
 const convert           = require('xml-js');
+const cheerio           = require('cheerio');
+const request           = require('request');
 const goodreads         = require('goodreads-api-node');
 const auth              = require('./auth.js');
 const checkPass         = require('./passwordcheck.js');
@@ -399,6 +401,88 @@ app.get('/eventbrite', (req, res) => {
         }).catch((error) => {
             console.log(error);
         });
+});
+
+app.get('/goodreadsevents/:countrycode', (req, res) => {
+    // let countryCode = '';
+    let countryCode = req.params.countrycode.toUpperCase();
+    console.log(countryCode);
+    let country ='New Zealand';
+    axios.get(`https://www.goodreads.com/event/index.xml?key=HYVXXW6GnQ5MwI3g8fjw&search[country_code]=${countryCode}`)
+        .then((data) => {
+            let xml = data.data;
+            let result1 = convert.xml2json(xml, {compact: true, spaces: 4});
+            let obj = JSON.parse(result1);
+            // console.log("testing length: ", obj.GoodreadsResponse.events.event[3].resource_id._attributes);
+            // console.log("testing length2: ", obj.GoodreadsResponse.events.event.length);
+            for (let i = 0; i < obj.GoodreadsResponse.events.event.length; i++) {
+                if (obj.GoodreadsResponse.events.event[i].city._text != undefined) {
+                    console.log("there is a city");
+                    gr.getAuthorInfo(obj.GoodreadsResponse.events.event[i].resource_id._text)
+                        .then(data => {
+                            console.log(data);
+                            db.insertGoodReadsEvent(
+                                data.name,
+                                obj.GoodreadsResponse.events.event[i].resource_id._text,
+                                obj.GoodreadsResponse.events.event[i].title._text,
+                                obj.GoodreadsResponse.events.event[i].venue._text,
+                                obj.GoodreadsResponse.events.event[i].city._text,
+                                country,
+                                obj.GoodreadsResponse.events.event[i].start_at._text
+                            )
+                                .then((data) => {
+                                    console.log(data);
+                                }).catch(err => { console.log(err); });
+                        }).catch(err => { console.log(err); });
+
+                } else {
+                    console.log("there is NOT a city");
+                }
+            }
+            res.json(obj);
+        }).catch((error) => {
+            console.log(error);
+        });
+});
+
+app.get('/updateauthorstable', (req, response) => {
+    db.getAuthorNamesFromGoodReadsTable()
+        .then(data => {
+            console.log(data.rows[0].goodreads_id);
+            for (let i = 0; i < data.rows.length; i++) {
+                gr.getAuthorInfo(data.rows[i].goodreads_id)
+                    .then(data => {
+                        console.log(data);
+                        // response.json({success: true});
+                        db.insertNewAuthor(
+                            data.name,
+                            1,
+                            data.image_url,
+                            'test',
+                            data.id
+                        )
+                            .then(() => {
+                                response.json({success: true});
+                            }).catch(err => { console.log(err); });
+                    }).catch(err => { console.log(err); });
+            }
+        }).catch(err => { console.log(err); });
+});
+
+app.get('/wiki', (req, response) => {
+
+    let url = 'https://en.wikipedia.org/wiki/List_of_authors_by_name:_A';
+    request(url, { json: true }, (err, res, body) => {
+
+        if (err) { return console.log(err); }
+        const $ = cheerio.load(body);
+        let authors = $('a').eq(0).attribs;
+        // for (let i = 0; i < as.length; i++ ) {
+        //
+        // }
+        console.log(authors);
+        response.json({success: true});
+    });
 });
 
 
