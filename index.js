@@ -271,54 +271,47 @@ app.get('/authgoodreads.json', (req, res) => {
 });
 
 app.get('/token.json', (req, res) => {
-    console.log("MADE IT HERE!!!");
     gr.getAccessToken()
         .then(() => {
             console.log("MADE IT TO ACCESS TOKEN");
-            gr.getUserInfo()
+            gr.getCurrentUserInfo()
                 .then(data => {
-                    console.log("user data?: ",data);
+                    req.session.goodReadsId = data.user.id;
+                    axios.get(`https://www.goodreads.com/review/list/${req.session.goodReadsId}.xml?key=${secrets.key}&shelf=read&per_page=200&v=2`)
+                        .then((data) => {
+                            console.log("converting...");
+                            let xml = data.data;
+                            let result1 = convert.xml2json(xml, {compact: true, spaces: 4});
+                            let obj = JSON.parse(result1);
+
+                            let authorsArray = [];
+                            for (var i = 0; i < obj.GoodreadsResponse.reviews.review.length; i++) {
+                                authorsArray.push({
+                                    name: obj.GoodreadsResponse.reviews.review[i].book.authors.author.name._text,
+                                    author_pic_url: obj.GoodreadsResponse.reviews.review[i].book.authors.author.image_url._cdata,
+                                    popularity_ranking: obj.GoodreadsResponse.reviews.review[i].book.authors.author.text_reviews_count._text,
+                                    goodreads_id: obj.GoodreadsResponse.reviews.review[i].book.authors.author.id._text,
+                                });
+                            }
+                            let uniqueAuthors = authorsArray.filter((thing, index, self) =>
+                                index === self.findIndex((t) => (
+                                    t.name === thing.name
+                                ))
+                            );
+
+                            console.log("there should be this number of authors: ", authorsArray.length);
+                            res.json({uniqueAuthors: uniqueAuthors});
+                            for (let i = 0; i < uniqueAuthors.length; i++) {
+                                db.insertNewAuthor(
+                                    uniqueAuthors[i].name,
+                                    req.session.userId,
+                                    uniqueAuthors[i].author_pic_url,
+                                    uniqueAuthors[i].popularity_ranking,
+                                    uniqueAuthors[i].goodreads_id,
+                                );
+                            }
+                        }).catch(err => {console.log(err);});
                 }).catch(err => { console.log(err); });
-            // gr.followAuthor(4432)
-            //     .then((data) => {
-            //         req.session.goodReadsId = data.author_following.user.id;
-            //         axios.get(`https://www.goodreads.com/review/list/${req.session.goodReadsId}.xml?key=${secrets.key}&shelf=read&per_page=200&v=2`)
-            //             .then((data) => {
-            //                 console.log("converting...");
-            //                 let xml = data.data;
-            //                 let result1 = convert.xml2json(xml, {compact: true, spaces: 4});
-            //                 let obj = JSON.parse(result1);
-            //                 console.log("should be finished");
-            //                 console.log("Info about authors: ", obj.GoodreadsResponse.reviews.review[2].book.authors.author.id._text);
-            //
-            //                 let authorsArray = [];
-            //                 for (var i = 0; i < obj.GoodreadsResponse.reviews.review.length; i++) {
-            //                     authorsArray.push({
-            //                         name: obj.GoodreadsResponse.reviews.review[i].book.authors.author.name._text,
-            //                         author_pic_url: obj.GoodreadsResponse.reviews.review[i].book.authors.author.image_url._cdata,
-            //                         popularity_ranking: obj.GoodreadsResponse.reviews.review[i].book.authors.author.text_reviews_count._text,
-            //                         goodreads_id: obj.GoodreadsResponse.reviews.review[i].book.authors.author.id._text,
-            //                     });
-            //                 }
-            //                 let uniqueAuthors = authorsArray.filter((thing, index, self) =>
-            //                     index === self.findIndex((t) => (
-            //                         t.name === thing.name
-            //                     ))
-            //                 );
-            //
-            //                 console.log(uniqueAuthors);
-            //                 res.json({uniqueAuthors: uniqueAuthors});
-            //                 for (let i = 0; i < uniqueAuthors.length; i++) {
-            //                     db.insertNewAuthor(
-            //                         uniqueAuthors[i].name,
-            //                         req.session.userId,
-            //                         uniqueAuthors[i].author_pic_url,
-            //                         uniqueAuthors[i].popularity_ranking,
-            //                         uniqueAuthors[i].goodreads_id,
-            //                     );
-            //                 }
-            //             }).catch(err => {console.log(err);});
-            //     }).catch(err => {console.log(err);});
         }).catch(err => {console.log(err);});
 });
 
