@@ -1,16 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getUserInfo, getEventsForUser, getAllEvents, getAllEventsByCountry } from './actions';
+import { getUserInfo, getAllEvents, getAllEventsByCountry } from './actions';
 
 class AllEventsOutsideOfCountry extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            highlighted: ''
+        };
+        this.countryClick = this.countryClick.bind(this);
+        this.getallcountries = this.getallcountries.bind(this);
+
     }
     componentDidMount() {
         this.props.dispatch(getUserInfo());
-        // this.props.dispatch(getEventsForUser());
         this.props.dispatch(getAllEvents());
         window.scrollTo(0, 0);
 
@@ -18,28 +22,35 @@ class AllEventsOutsideOfCountry extends React.Component {
     countryClick(e) {
         console.log("clicked on: ", e);
         this.props.dispatch(getAllEventsByCountry(e));
+        this.setState({
+            highlighted: 'countryhighlighted'
+        });
+    }
+
+    getallcountries() {
+        this.props.dispatch(getAllEvents());
+        this.setState({
+            highlighted: ''
+        });
     }
 
     render() {
         if (!this.props.userInfo) {
             return null;
         }
-        console.log("PROPS!!: ", this.props);
         if (!this.props.allevents) {
             return null;
         }
-        console.log("STATE!!: ", this.state);
         return (
             <div className="main-container-flex-around">
                 <div className="alleventsarea">
                     <div>
-                        <a href="/eventsoutofcountry">
-                            <h1>Events outside of {this.props.userInfo.data.country}</h1>
-                        </a>
-                        <div className="allcountries">
+                        <h1 onClick={this.getallcountries}>Events outside of {this.props.userInfo.data.country}</h1>
+                        <span onClick={this.getallcountries} className="darkblue countries">All Countries | </span>
+                        <div className="allcountries inline">
                             { this.props.countries.map(
                                 event => (
-                                    <span onClick={e => this.countryClick(event.country)} className="darkblue countries" key={event.id}>{event.country} | </span>
+                                    <span id={this.state.highlighted} onClick={e => this.countryClick(event.country)} className={`"darkblue countries ${this.state.highlighted}"`} key={event.id}>{event.country} | </span>
                                 )
                             )}
                         </div>

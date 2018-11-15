@@ -32,8 +32,6 @@ const myCredentials = {
 const gr = goodreads(myCredentials);
 gr.initOAuth('http://localhost:8080/');
 
-console.log(gr);
-
 const app = express();
 
 const server            = require('http').Server(app);
@@ -333,13 +331,24 @@ app.get('/getauthorbooks.json/:id', (req, res) => {
             } else {
                 gr.getAuthorInfo(req.params.id)
                     .then((data) => {
-                        let stringifyedData = JSON.stringify(data.books.book.slice(0,9));
+                        console.log("books: ", data.books.book);
+                        console.log(Array.isArray(data.books.book));
+                        let stringifyedData;
+                        if (Array.isArray(data.books.book)) {
+                            stringifyedData = JSON.stringify(data.books.book.slice(0,9));
+                        } else {
+                            stringifyedData = JSON.stringify([data.books.book]);
+                        }
                         redis.setex(req.params.id, 60 * 60 * 2, stringifyedData)
                             .then(() => {
                                 return redis.get(req.params.id);
                             }).then(() => {
                                 console.log("rendered from POSGRES");
-                                res.json(data.books.book.slice(0,9));
+                                if (Array.isArray(data.books.book)) {
+                                    res.json(data.books.book.slice(0,9));
+                                } else {
+                                    res.json([data.books.book]);
+                                }
                             });
                     }).catch(err => {console.log(err);});
             }
@@ -358,7 +367,6 @@ app.get('/getallevents.json', (req, res) => {
     let date = new Date().toISOString().slice(0,10);
     db.getAllEvents(date)
         .then(data => {
-            console.log(data.rows);
             res.json(data.rows);
         }).catch(err => { console.log(err); });
 });
@@ -369,10 +377,7 @@ app.get('/search.json/:q', (req, res) => {
             if (data.rows.length == 0 ) {
                 res.json({ data: 'no results', });
             } else {
-                console.log(data.rows);
-                res.json({
-                    data: data.rows
-                });
+                res.json({ data: data.rows });
             }
 
         }).catch(err => { console.log(err); });
@@ -385,7 +390,6 @@ app.get('/testingevents', (req, res) => {
     };
     axios.get('https://api.list.co.uk/v1/search?query=signing&page=5', config)
         .then((response) => {
-            console.log("RES: ", response.data);
             for (let i = 0; i < response.data.length; i++) {
                 if (response.data[i].tags[0] == 'books') {
                     db.insertTheListingEvent(

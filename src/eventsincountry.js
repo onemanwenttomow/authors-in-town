@@ -10,7 +10,6 @@ class AllEventsInCountry extends React.Component {
     }
     componentDidMount() {
         this.props.dispatch(getUserInfo());
-        // this.props.dispatch(getEventsForUser());
         this.props.dispatch(getAllEvents());
         window.scrollTo(0, 0);
 
