@@ -38,3 +38,22 @@ export async function getEventsForUser() {
         user_events: data
     };
 }
+
+export async function getAllEvents() {
+    const { data } = await axios.get('/getallevents.json');
+    return {
+        type: 'GET_ALL_EVENTS',
+        all_events: data
+    };
+}
+
+export async function getAllEventsByCountry(country) {
+    const { data } = await axios.get('/getallevents.json');
+    return {
+        type: 'GET_ALL_EVENTS',
+        all_events: data.filter(
+            event =>
+                event.country == country
+        )
+    };
+}

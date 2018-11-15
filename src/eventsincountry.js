@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getUserInfo, getEventsForUser, getAllEvents, getAllEventsByCountry } from './actions';
 
-class AllEventsOutsideOfCountry extends React.Component {
+class AllEventsInCountry extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
@@ -14,10 +14,6 @@ class AllEventsOutsideOfCountry extends React.Component {
         this.props.dispatch(getAllEvents());
         window.scrollTo(0, 0);
 
-    }
-    countryClick(e) {
-        console.log("clicked on: ", e);
-        this.props.dispatch(getAllEventsByCountry(e));
     }
 
     render() {
@@ -33,17 +29,7 @@ class AllEventsOutsideOfCountry extends React.Component {
             <div className="main-container-flex-around">
                 <div className="alleventsarea">
                     <div>
-                        <a href="/eventsoutofcountry">
-                            <h1>Events outside of {this.props.userInfo.data.country}</h1>
-                        </a>
-                        <div className="allcountries">
-                            { this.props.countries.map(
-                                event => (
-                                    <span onClick={e => this.countryClick(event.country)} className="darkblue countries" key={event.id}>{event.country} | </span>
-                                )
-                            )}
-                        </div>
-
+                        <h1>Events in the rest of {this.props.userInfo.data.country} (not {this.props.userInfo.data.city} )</h1>
                         { this.props.allevents.map(
                             event => (
                                 <div className="stretchedevent line" key={event.id}>
@@ -86,24 +72,15 @@ const mapStateToProps = function(state) {
         allevents: state.all_events && state.all_events
             .filter(
                 event =>
-                    event.town != state.user_info.data.city && event.country != state.user_info.data.country
+                    event.town != state.user_info.data.city && event.country == state.user_info.data.country
             ).reverse()
             .filter(
                 (thing, index, self) =>
                     index === self.findIndex((t) => (
                         t.goodreads_id === thing.goodreads_id
                     ))
-            ),
-        countries: state.all_events && state.all_events
-            .filter(
-                event => event.town != state.user_info.data.city && event.country != state.user_info.data.country
             )
-            .filter(
-                (thing, index, self) =>
-                    index === self.findIndex((t) => (
-                        t.country === thing.country
-                    ))),
     };
 };
 
-export default connect(mapStateToProps)(AllEventsOutsideOfCountry);
+export default connect(mapStateToProps)(AllEventsInCountry);

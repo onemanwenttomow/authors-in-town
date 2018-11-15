@@ -34,7 +34,7 @@ class Header extends React.Component {
                 <div className="header">
                     <div>
                         <Link to="/" className="no-underline">
-                            <p className="logo no-underline"><i className="logo logohover far fa-bookmark"></i> Authors<span className="pink">In</span>Town</p>
+                            <p className="logo no-underline"><i className="logo logohover far fa-bookmark"></i> Authors<span className="pink headerspan">In</span>Town</p>
                         </Link>
                     </div>
                     <Search/>

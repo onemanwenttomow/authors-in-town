@@ -33,6 +33,13 @@ export default function(state = {}, action) {
             user_events: action.user_events
         };
     }
+    if (action.type == 'GET_ALL_EVENTS') {
+        state = {
+            ...state,
+            all_events: action.all_events
+        };
+    }
+
 
     return state;
 }

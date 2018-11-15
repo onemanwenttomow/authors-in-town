@@ -233,7 +233,8 @@ app.get('/getuserinfo.json', function(req, res) {
 });
 
 app.get('/getauthorsevents.json', function(req, res) {
-    db.getAuthorEvents(req.session.userId)
+    let currentDate2 = new Date().toISOString().slice(0,10);
+    db.getAuthorEvents(req.session.userId, currentDate2)
         .then(data => {
             res.json({ data: data.rows });
         }).catch(err => { console.log(err); });
@@ -247,7 +248,8 @@ app.get('/getauthorbyid.json/:id', function(req, res) {
 });
 
 app.get('/getauthorseventsbyid.json/:id', function(req, res) {
-    db.getAuthorEventsByGoodReadsId(req.params.id)
+    let currentDate3 = new Date().toISOString().slice(0,10);
+    db.getAuthorEventsByGoodReadsId(req.params.id, currentDate3)
         .then(data => {
             res.json({ data: data.rows });
         }).catch(err => { console.log(err); });
@@ -345,10 +347,20 @@ app.get('/getauthorbooks.json/:id', (req, res) => {
 });
 
 app.get('/geteventsbyuserid.json', (req, res) => {
-    db.getPopularAuthorEvents(req.session.userId)
+    let currentDate = new Date().toISOString().slice(0,10);
+    db.getPopularAuthorEvents(req.session.userId, currentDate)
         .then((data) => {
             res.json(data.rows);
         }).catch(err => {console.log(err);});
+});
+
+app.get('/getallevents.json', (req, res) => {
+    let date = new Date().toISOString().slice(0,10);
+    db.getAllEvents(date)
+        .then(data => {
+            console.log(data.rows);
+            res.json(data.rows);
+        }).catch(err => { console.log(err); });
 });
 
 app.get('/search.json/:q', (req, res) => {

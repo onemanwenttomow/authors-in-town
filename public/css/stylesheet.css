@@ -176,6 +176,10 @@ ul, li { /* reset the margin and padding */
     padding: 0;
 }
 
+.headerspan:hover {
+    color: #3fc1c9;
+}
+
 /* ///////////////////////////////////////////////////////////////////////// */
 /* ///////////////////         MAIN EVENTS PAGE       ////////////////////// */
 /* ///////////////////////////////////////////////////////////////////////// */
@@ -336,6 +340,21 @@ input[type="datetime-local"]:hover {
 
 .alleventslocation {
     width: 600px;
+}
+
+.countries {
+    /* padding: 5px; */
+    font-size: 20px;
+}
+
+.countries:hover {
+    color: #3fc1c9;
+    cursor: pointer;
+}
+
+.allcountries {
+    /* padding: 5px; */
+    padding-bottom: 30px
 }
 
 /* ///////////////////////////////////////////////////////////////////////// */
@@ -645,6 +664,7 @@ select:-webkit-autofill:focus {
 
 .pink { color: #fc5185; }
 .blue { color: #3fc1c9; }
+.darkblue { color: #364f6b; }
 
 #bluebackground {
     position: relative;

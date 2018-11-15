@@ -42,7 +42,7 @@ INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name
     'Super special test event title',
     'Waterstones Oxford',
     'Oxford',
-    'UK',
+    'The United Kingdom',
     '2018-11-19T21:30'
 );
 
@@ -185,7 +185,7 @@ INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name
     'Cardiff Library Talk',
     'Rhydypennau Library,',
     'Cardiff',
-    'UK',
+    'The United Kingdom',
     '2019-01-16T19:00'
 );
 
@@ -273,6 +273,6 @@ INSERT INTO goodreadsevents (user_id, name, goodreads_id, event_name, venue_name
     'Fforde Ffiesta VIII',
     'Village Hotel',
     'Swindon',
-    'UK',
+    'The United Kingdom',
     '2019-03-25T11:00'
 );

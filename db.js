@@ -129,29 +129,52 @@ exports.getCuratedAuthorEvents = function(userid) {
     return db.query(query, params);
 };
 
-exports.getPopularAuthorEvents = function(userid) {
+/// add dynamic event.
+exports.getPopularAuthorEvents = function(userid, currentDate) {
     const query = `
         SELECT DISTINCT authors.goodreads_id, author_pic_url, venue_name, event_time, goodreadsevents.id, authors.name, popularity_ranking, town, country
         FROM goodreadsevents
         JOIN authors
         ON authors.goodreads_id = goodreadsevents.goodreads_id
         WHERE authors.user_id = $1
+        AND
+        event_time >= $2
+        AND event_time <  '2020-07-01'
         ORDER BY popularity_ranking DESC
         LIMIT 200
     `;
-    const params = [userid || null];
+    const params = [userid || null, currentDate];
     return db.query(query, params);
 };
 
-exports.getAuthorEvents = function(userid) {
+/// add dynamic event.
+exports.getAuthorEvents = function(userid, currentDate) {
     const query = `
         SELECT DISTINCT authors.name, author_pic_url, venue_name, event_time, goodreadsevents.id, goodreadsevents.goodreads_id
         FROM goodreadsevents
         JOIN authors
         ON authors.goodreads_id = goodreadsevents.goodreads_id
         WHERE goodreadsevents.user_id = $1
+        AND
+        event_time >= $2
+        AND event_time <  '2020-07-01'
     `;
-    const params = [userid || null];
+    const params = [userid || null ,currentDate];
+    return db.query(query, params);
+};
+
+exports.getAllEvents = function(currentDate) {
+    const query = `
+        SELECT DISTINCT authors.name, author_pic_url, venue_name, event_time, goodreadsevents.id, country, town, goodreadsevents.goodreads_id
+        FROM goodreadsevents
+        JOIN authors
+        ON authors.goodreads_id = goodreadsevents.goodreads_id
+        WHERE event_time >= $1
+        AND event_time <  '2020-07-01'
+        ORDER BY event_time DESC
+        LIMIT 200
+    `;
+    const params = [currentDate];
     return db.query(query, params);
 };
 
