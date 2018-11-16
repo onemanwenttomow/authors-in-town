@@ -44,7 +44,7 @@ class AllEventsOutsideOfCountry extends React.Component {
         return (
             <div className="main-container-flex-around">
                 <div className="alleventsarea">
-                    <div>
+                    <div className="allevents-cont">
                         <h1 onClick={this.getallcountries}>Events outside of {this.props.userInfo.data.country}</h1>
                         <span onClick={this.getallcountries} className="darkblue countries">All Countries | </span>
                         <div className="allcountries inline">
