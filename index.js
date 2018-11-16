@@ -371,6 +371,15 @@ app.get('/getallevents.json', (req, res) => {
         }).catch(err => { console.log(err); });
 });
 
+app.get('/getmoreevents.json/:id', (req, res) => {
+    let date = new Date().toISOString().slice(0,10);
+    console.log("ID PARAMS: ", typeof req.params.id);
+    db.getMoreEvents(date, req.params.id.toString())
+        .then(data => {
+            res.json(data.rows);
+        }).catch(err => { console.log(err); });
+});
+
 app.get('/search.json/:q', (req, res) => {
     db.incrementalSearchQuery(req.params.q)
         .then(data => {

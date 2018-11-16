@@ -1,17 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getUserInfo, getAllEvents, getAllEventsByCountry } from './actions';
+import { getUserInfo, getAllEvents, getAllEventsByCountry, getMoreEvents } from './actions';
 
 class AllEventsOutsideOfCountry extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            highlighted: ''
+            highlighted: '',
+            moreButtonDisabled: false
         };
         this.countryClick = this.countryClick.bind(this);
         this.getallcountries = this.getallcountries.bind(this);
-
+        this.getMoreImages = this.getMoreImages.bind(this);
     }
     componentDidMount() {
         this.props.dispatch(getUserInfo());
@@ -32,6 +33,21 @@ class AllEventsOutsideOfCountry extends React.Component {
         this.setState({
             highlighted: ''
         });
+    }
+
+    getMoreImages() {
+
+        if (this.props.allevents.length == 0) {
+            this.setState({
+                moreButtonDisabled: true
+            });
+            return;
+        } else {
+            let sortedArr = this.props.allevents.sort((a,b) => (a.event_time > b.event_time) ? 1 : ((b.event_time > a.event_time) ? -1 : 0));
+            console.log(sortedArr[this.props.allevents.length - 1].id);
+            console.log("ARRAY!!!!!!: ", this.props.allevents);
+            this.props.dispatch(getMoreEvents(sortedArr[this.props.allevents.length - 1].id));
+        }
     }
 
     render() {
@@ -81,6 +97,7 @@ class AllEventsOutsideOfCountry extends React.Component {
                                 </div>
                             )
                         )}
+                        <button disabled={this.state.moreButtonDisabled} onClick={this.getMoreImages} className="btn inline" >Get More</button>
                     </div>
                 </div>
             </div>
@@ -98,7 +115,7 @@ const mapStateToProps = function(state) {
             .filter(
                 event =>
                     event.town != state.user_info.data.city && event.country != state.user_info.data.country
-            ).reverse()
+            )
             .filter(
                 (thing, index, self) =>
                     index === self.findIndex((t) => (

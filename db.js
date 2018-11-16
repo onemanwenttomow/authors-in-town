@@ -186,10 +186,26 @@ exports.getAllEvents = function(currentDate) {
         ON authors.goodreads_id = goodreadsevents.goodreads_id
         WHERE event_time >= $1
         AND event_time <  '2020-07-01'
-        ORDER BY event_time DESC
-        LIMIT 200
+        ORDER BY event_time
+        LIMIT 20
     `;
     const params = [currentDate];
+    return db.query(query, params);
+};
+
+exports.getMoreEvents = function(currentDate, id) {
+    const query = `
+        SELECT DISTINCT authors.name, author_pic_url, venue_name, event_time, goodreadsevents.id, country, town, goodreadsevents.goodreads_id
+        FROM goodreadsevents
+        JOIN authors
+        ON authors.goodreads_id = goodreadsevents.goodreads_id
+        WHERE event_time >= $1
+        AND event_time <  '2020-07-01'
+        AND goodreadsevents.id < $2
+        ORDER BY event_time
+        LIMIT 20
+    `;
+    const params = [currentDate, id];
     return db.query(query, params);
 };
 

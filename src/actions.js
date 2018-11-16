@@ -57,3 +57,12 @@ export async function getAllEventsByCountry(country) {
         )
     };
 }
+
+export async function getMoreEvents(id) {
+    console.log("GET MORE EVENTS!!!");
+    const { data } = await axios.get('/getmoreevents.json/' + id);
+    return {
+        type: 'GET_ALL_EVENTS',
+        all_events: data
+    };
+}
