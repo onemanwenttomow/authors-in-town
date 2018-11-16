@@ -10,12 +10,13 @@ class Author extends React.Component {
             followButtonDisabled: false
         };
         this.followButtonClick = this.followButtonClick.bind(this);
-        let authorId;
+        let authorId, authorUrl;
     }
     componentDidMount() {
         console.log("mounted");
         this.authorId = this.props.match.params.id;
         console.log("authorID: ", this.authorId);
+        this.authorUrl = "https://www.goodreads.com/author/show/" + this.authorId;
         axios.get('/userfollowingauthorcheck.json/' + this.authorId)
             .then(data => {
                 console.log("Is the user following?: ", data.data.following);
@@ -81,7 +82,9 @@ class Author extends React.Component {
                 <div className="main-container-flex">
                     <div className="author-profile">
                         <h1>{this.state.name}</h1>
-                        <img src={this.state.imgurl} alt={this.state.name}/>
+                        <a href={this.authorUrl}>
+                            <img src={this.state.imgurl} alt={this.state.name}/>
+                        </a>
                     </div>
                     <div>
                         <h1>Events</h1>
@@ -95,7 +98,9 @@ class Author extends React.Component {
                 <div className="main-container-flex">
                     <div className="author-profile">
                         <h1>{this.state.name}</h1>
-                        <img src={this.state.imgurl} alt={this.state.name}/>
+                        <a href={this.authorUrl}>
+                            <img src={this.state.imgurl} alt={this.state.name}/>
+                        </a>
                     </div>
                     <div className="eventsarea">
                         <div>
@@ -124,7 +129,7 @@ class Author extends React.Component {
                                             <div className="month"> {event.event_time.split('-')[1]} </div>
                                         </div>
                                         <h3 className="blue inline extrapadding">{this.state.name}</h3>
-                                        <p className="inline">{event.venue_name}, {event.town}</p>
+                                        <p className="inline">{event.venue_name}, {event.town}, {event.country}</p>
                                         <div>
                                             <button className="btn inline" >Get Tickets</button>
                                         </div>
@@ -144,7 +149,9 @@ class Author extends React.Component {
                     <div className="author-profile">
                         <h1>{this.state.name}</h1>
                         <div className="author-pic-and-button">
-                            <img className="author-pic-profile" src={this.state.imgurl} alt={this.state.name}/>
+                            <a href={this.authorUrl}>
+                                <img className="author-pic-profile" src={this.state.imgurl} alt={this.state.name}/>
+                            </a>
                             <button
                                 id={this.state.followColor}
                                 className="btn inline extraleftpadding"
@@ -197,7 +204,7 @@ class Author extends React.Component {
                                             <div className="month"> {event.event_time.split('-')[1]} </div>
                                         </div>
                                         <h3 className="blue inline extrapadding">{this.state.name}</h3>
-                                        <p className="inline">{event.venue_name}, {event.town}</p>
+                                        <p className="inline">{event.venue_name}, {event.town}, {event.country}</p>
                                         <div>
                                             <button className="btn inline" >Get Tickets</button>
                                         </div>
