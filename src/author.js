@@ -6,29 +6,69 @@ import axios from './axios';
 class Author extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            followButtonDisabled: false
+        };
+        this.followButtonClick = this.followButtonClick.bind(this);
+        let authorId;
     }
     componentDidMount() {
         console.log("mounted");
-        const authorId = this.props.match.params.id;
-        console.log("authorID: ", authorId);
-        axios.get('/getauthorbyid.json/' + authorId)
+        this.authorId = this.props.match.params.id;
+        console.log("authorID: ", this.authorId);
+        axios.get('/userfollowingauthorcheck.json/' + this.authorId)
+            .then(data => {
+                console.log("Is the user following?: ", data.data.following);
+                if (data.data.following) {
+                    this.setState({
+                        followButtonText: 'Unfollow',
+                        followColor: 'blue'
+                    });
+                } else {
+                    this.setState({
+                        followButtonText: 'Follow',
+                        followColor: ''
+                    });
+                }
+            }).catch(err => { console.log(err); });
+        axios.get('/getauthorbyid.json/' + this.authorId)
             .then((data) => {
                 console.log(data);
                 this.setState({
                     name: data.data.data.name,
                     imgurl: data.data.data.author_pic_url
                 });
-                this.props.dispatch(getAuthorEventById(authorId));
-                axios.get('/getauthorbooks.json/' + authorId)
+                this.props.dispatch(getAuthorEventById(this.authorId));
+                axios.get('/getauthorbooks.json/' + this.authorId)
                     .then((data) => {
-                        console.log("BOOKS!: ", data);
-                        this.setState({
-                            books: data.data,
-                        });
+                        this.setState({ books: data.data });
                     }).catch(err => { console.log(err); });
-
             }).catch(err => { console.log(err); });
+    }
+
+    followButtonClick() {
+        console.log("AUTHOR ID: ", this.authorId);
+        if (this.state.followButtonText == 'Unfollow') {
+            console.log("DO some unfollowing");
+            axios.post('/unfollowauthor.json/' + this.authorId)
+                .then(() => {
+                    this.setState({
+                        followButtonText: 'Follow',
+                        followColor: ''
+                    });
+                }).catch(err => {console.log(err); });
+        } else {
+            console.log("do some following");
+            this.setState({ followButtonDisabled: true });
+            axios.post('/followauthor.json/' + this.authorId)
+                .then(() => {
+                    this.setState({
+                        followButtonText: 'Unfollow',
+                        followColor: 'blue',
+                        followButtonDisabled: false
+                    });
+                }).catch(err => {console.log(err); });
+        }
     }
 
     render() {
@@ -103,7 +143,16 @@ class Author extends React.Component {
                 <div className="main-container-flex">
                     <div className="author-profile">
                         <h1>{this.state.name}</h1>
-                        <img src={this.state.imgurl} alt={this.state.name}/>
+                        <div className="author-pic-and-button">
+                            <img className="author-pic-profile" src={this.state.imgurl} alt={this.state.name}/>
+                            <button
+                                id={this.state.followColor}
+                                className="btn inline extraleftpadding"
+                                onClick={this.followButtonClick}
+                                disabled={this.state.followButtonDisabled}
+                            >{this.state.followButtonText}</button>
+                        </div>
+
                         <h2>Books:</h2>
                         <div className="books">
                             { this.state.books.map(

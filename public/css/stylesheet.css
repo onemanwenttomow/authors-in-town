@@ -147,6 +147,10 @@ ul, li { /* reset the margin and padding */
     border: 3px #fc5185 solid;
 }
 
+.profile-pic:hover {
+    cursor: pointer;
+}
+
 .header-menu {
     overflow: hidden;
     position: absolute;
@@ -194,6 +198,14 @@ ul, li { /* reset the margin and padding */
 
 .headerspan:hover {
     color: #3fc1c9;
+}
+
+/* ///////////////////////////////////////////////////////////////////////// */
+/* ///////////////////       EDIT PROFILE PAGE       ////////////////////// */
+/* ///////////////////////////////////////////////////////////////////////// */
+
+.user-profile-pic {
+    width: 400px;
 }
 
 /* ///////////////////////////////////////////////////////////////////////// */
@@ -254,6 +266,12 @@ ul, li { /* reset the margin and padding */
 h5 {
     margin-top: 5px;
 }
+
+.author-pic-profile {
+    width: 200px;
+}
+
+
 
 /* ///////////////////////////////////////////////////////////////////////// */
 /* ///////////////////            EVENTS              ////////////////////// */
@@ -621,6 +639,11 @@ select:-webkit-autofill:focus {
     color: white;
 }
 
+#verifysuccess {
+    background-color: #2ecc71;
+    color: white;
+}
+
 
 /* //////////////////////////////////////////////////////////////////////////// */
 /* ///////////////////////      BACKGROUND VIDEO     ////////////////////////// */
@@ -695,6 +718,18 @@ select:-webkit-autofill:focus {
 
 .inline { display: inline-block; }
 
+.extraleftpadding {
+    margin-left: 35px;
+}
+
+#blue {
+    background-color: #3fc1c9;
+}
+
+.nopadding {
+    padding-top: 0;
+}
+
 /* ///////////////////////////////////////////////////////////////////////// */
 /* ///////////////////        MOBILE FRIENDLY            /////////////////// */
 /* ///////////////////////////////////////////////////////////////////////// */
@@ -719,9 +754,21 @@ select:-webkit-autofill:focus {
         border-radius: 4px;
         box-shadow: rgba(0, 0, 0, 0.32) 0px 16px 40px
     }
+    .main-container {
+        max-width: 700px;
+    }
+
+    .main-container-flex {
+        max-width: 700px;
+    }
+
+    .main-container-flex-around {
+        max-width: 700px;
+    }
+
 
 }
 
-@media only screen and (max-width: 600px) {
+/* @media only screen and (max-width: 600px) {
 
-}
+} */

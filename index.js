@@ -502,6 +502,45 @@ app.get('/wiki', (req, response) => {
     });
 });
 
+app.get('/userfollowingauthorcheck.json/:authorid', function(req, res) {
+    console.log(req.params.authorid);
+    db.userFollowingAuthorCheck(req.session.userId, req.params.authorid)
+        .then(data => {
+            console.log(data);
+            if (data.rows.length > 0) {
+                res.json({following: true});
+            } else {
+                res.json({following: false});
+            }
+        }).catch(err => { console.log(err); });
+});
+
+app.post('/unfollowauthor.json/:authorid', (req, res) => {
+    db.unfollowAuthor(req.session.userId, req.params.authorid)
+        .then(data => {
+            console.log(data);
+            res.json({following: false});
+        }).catch(err => { console.log(err); });
+});
+
+app.post('/followauthor.json/:authorid', (req, res) => {
+    gr.getAuthorInfo(req.params.authorid)
+        .then(data => {
+            console.log(data);
+            db.insertNewAuthor(
+                data.name,
+                req.session.userId,
+                data.image_url,
+                data.author_followers_count,
+                req.params.authorid
+            )
+                .then(data => {
+                    console.log(data);
+                    res.json({following: true});
+                }).catch(err => { console.log(err); });
+        }).catch(err => { console.log(err); });
+
+});
 
 app.get('/logout', function(req, res) {
     req.session.userId = null;

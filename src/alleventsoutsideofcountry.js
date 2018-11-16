@@ -68,7 +68,7 @@ class AllEventsOutsideOfCountry extends React.Component {
                                     </div>
                                     <Link to={`/author/${event.goodreads_id}`} >
                                         <div className="alleventslocation">
-                                            <h3 className="blue inline extrapadding">{event.country}&nbsp; </h3>
+                                            <h3 className="blue inline extrapadding">{event.name}&nbsp; </h3>
                                             <p className="inline">{event.venue_name}, {event.town}</p>
                                         </div>
                                     </Link>

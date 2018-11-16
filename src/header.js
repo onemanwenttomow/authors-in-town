@@ -45,9 +45,12 @@ class Header extends React.Component {
                         <Link to="/" className="no-underline">
                             <p onMouseEnter ={this.addLogoHighlighted} onMouseLeave={this.removeLogoHighlighted} className="logo no-underline">
                                 <i className="logo logohover far fa-bookmark"></i>
-                                &nbsp;Authors
-                                <span id={this.state.logohighlighted} className="pink headerspan">In</span>
-                                Town
+                                <span className="textlogo">
+                                    &nbsp;Authors
+                                    <span id={this.state.logohighlighted} className="pink headerspan">In</span>
+                                    Town
+                                </span>
+
                             </p>
                         </Link>
                     </div>
