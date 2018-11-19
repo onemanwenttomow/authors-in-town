@@ -34,7 +34,7 @@ class Author extends React.Component {
             }).catch(err => { console.log(err); });
         axios.get('/getauthorbyid.json/' + this.authorId)
             .then((data) => {
-                console.log(data);
+                console.log("getauthorbyid: ", data);
                 this.setState({
                     name: data.data.data.name,
                     imgurl: data.data.data.author_pic_url
@@ -42,6 +42,7 @@ class Author extends React.Component {
                 this.props.dispatch(getAuthorEventById(this.authorId));
                 axios.get('/getauthorbooks.json/' + this.authorId)
                     .then((data) => {
+                        console.log("BOOKS!!!: ", data);
                         this.setState({ books: data.data });
                     }).catch(err => { console.log(err); });
             }).catch(err => { console.log(err); });

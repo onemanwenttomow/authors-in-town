@@ -288,3 +288,16 @@ exports.incrementalSearchQuery = function(q) {
     const params = ['%' + q + '%' || null];
     return db.query(query, params);
 };
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+///////////////////         AUTHOR LONG LIST          //////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+exports.insertNewLongListAuthor = function(name) {
+    const q = `INSERT INTO authorlonglist (name)
+            VALUES ($1)`;
+    const params = [name || null];
+    return db.query(q, params);
+};

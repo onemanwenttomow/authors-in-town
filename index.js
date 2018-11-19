@@ -16,6 +16,7 @@ const auth              = require('./auth.js');
 const checkPass         = require('./passwordcheck.js');
 const db                = require('./db.js');
 const happy             = require('./happy.js');
+const non               = require('./nonauthors.js');
 const s3                = require('./s3.js');
 const s3url             = require('./config.json');
 const secrets           = require('./secrets');
@@ -496,19 +497,35 @@ app.get('/updateauthorstable', (req, response) => {
 });
 
 app.get('/wiki', (req, response) => {
+    let alphabetArray = non.alphabetArray();
+    // let alphabetArray = ["D"];
 
-    let url = 'https://en.wikipedia.org/wiki/List_of_authors_by_name:_A';
-    request(url, { json: true }, (err, res, body) => {
+    let arrayPromise = [];
+    for (let i = 0; i < alphabetArray.length; i++) {
+        let list = [];
+        let url = `https://en.wikipedia.org/wiki/List_of_authors_by_name:_${alphabetArray[i]}`;
+        request(url, { json: true }, (err, res, body) => {
 
-        if (err) { return console.log(err); }
-        const $ = cheerio.load(body);
-        let authors = $('a').eq(0).attribs;
-        // for (let i = 0; i < as.length; i++ ) {
-        //
-        // }
-        console.log(authors);
-        response.json({success: true});
-    });
+            if (err) { return console.log(err); }
+            const $ = cheerio.load(body);
+            $('h2').nextUntil('.navbox').find('a').each((index, element) => {
+                list.push($(element).text());
+            });
+            let nonAuthors = non.getNonAuthors();
+            list = list.filter( ( el ) => !nonAuthors.includes( el ) );
+
+            // console.log(list);
+            for (let k =0; k < list.length; k++) {
+                arrayPromise.push(db.insertNewLongListAuthor(list[k]));
+            }
+        });
+        // response.json({success: list});
+    }
+    return Promise.all(arrayPromise)
+        .then((data) => {
+            response.json(data);
+        }).catch(err => {console.log(err);});
+
 });
 
 app.get('/userfollowingauthorcheck.json/:authorid', function(req, res) {
