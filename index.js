@@ -17,6 +17,8 @@ const checkPass         = require('./passwordcheck.js');
 const db                = require('./db.js');
 const happy             = require('./happy.js');
 const non               = require('./nonauthors.js');
+const authors           = require('./realauthors.js');
+const authors2          = require('./realauthors2.js');
 const s3                = require('./s3.js');
 const s3url             = require('./config.json');
 const secrets           = require('./secrets');
@@ -29,6 +31,8 @@ const myCredentials = {
     key: secrets.key,
     secret: secrets.secret
 };
+let bigList = authors2.getPanMac();
+console.log("array of authors: ", bigList.length );
 
 const gr = goodreads(myCredentials);
 gr.initOAuth('http://localhost:8080/');
@@ -518,6 +522,41 @@ app.get('/wiki', (req, response) => {
             for (let k =0; k < list.length; k++) {
                 arrayPromise.push(db.insertNewLongListAuthor(list[k]));
             }
+        });
+        // response.json({success: list});
+    }
+    return Promise.all(arrayPromise)
+        .then((data) => {
+            response.json(data);
+        }).catch(err => {console.log(err);});
+
+});
+
+app.get('/schuster', (req, response) => {
+    // let alphabetArray = non.alphabetArray();
+    let alphabetArray = ["A"];
+
+    let arrayPromise = [];
+    for (let i = 0; i < alphabetArray.length; i++) {
+        let list = [];
+        let url = `http://www.simonandschuster.com/authors/browse/${alphabetArray[i]}`;
+        request(url, { json: true }, (err, res, body) => {
+
+            if (err) { return console.log(err); }
+            const $ = cheerio.load(body);
+            console.log($('div').attr('id', 'authors_list'));
+            $('div').attr('id', 'authors_list').nextUntil('.bootstrap').children().find('a').each((index, element) => {
+                list.push($(element).text());
+                // .split(",").reverse().join(" ")
+            });
+            console.log(list);
+            // let nonAuthors = non.getNonAuthors();
+            // list = list.filter( ( el ) => !nonAuthors.includes( el ) );
+            //
+            // // console.log(list);
+            // for (let k =0; k < list.length; k++) {
+            //     arrayPromise.push(db.insertNewLongListAuthor(list[k]));
+            // }
         });
         // response.json({success: list});
     }

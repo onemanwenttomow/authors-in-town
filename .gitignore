@@ -1,3 +1,5 @@
 node_modules
 .DS_Store
 secrets.json
+realauthors.js
+realauthors2.js
