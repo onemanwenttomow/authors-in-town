@@ -102,13 +102,21 @@ if (process.env.NODE_ENV != 'production') {
 
 app.use(express.static('public'));
 
-app.use(session({
-    store: new Store({
-        ttl: 3600, //1 hour
+var store = {};
+if(process.env.REDIS_URL){
+    store = {
+        url: process.env.REDIS_URL
+    };
+} else {
+    store = {
+        ttl: 3600, //time to live
         host: 'localhost',
         port: 6379
-    }),
-    resave: false,
+    };
+}
+app.use(session({
+    store: new Store(store),
+    resave: true,
     saveUninitialized: true,
     secret: secrets.redis_secret
 }));
