@@ -7,7 +7,6 @@ const multer            = require('multer');
 const uidSafe           = require('uid-safe');
 const path              = require('path');
 const axios             = require('axios');
-const url               = require('url');
 const convert           = require('xml-js');
 const cheerio           = require('cheerio');
 const request           = require('request');
@@ -21,10 +20,16 @@ const authors           = require('./realauthors.js');
 const authors2          = require('./realauthors2.js');
 const s3                = require('./s3.js');
 const s3url             = require('./config.json');
-const secrets           = require('./secrets');
 const redis             = require('./redis');
 const session           = require('express-session');
 const Store             = require('connect-redis')(session);
+
+let secrets;
+if (process.env.NODE_ENV === 'production') {
+    secrets = process.env;
+} else {
+    secrets = require('./secrets');
+}
 
 
 const myCredentials = {
@@ -39,12 +44,10 @@ gr.initOAuth('http://localhost:8080/');
 
 const app = express();
 
-const server            = require('http').Server(app);
-const io                = require('socket.io')(server, { origins: 'localhost:8080' });
+const server = require('http').Server(app);
+const io = require('socket.io')(server, { origins: 'localhost:8080' });
 
 app.use(compression());
-
-
 
 const diskStorage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -581,7 +584,7 @@ app.get('/userfollowingauthorcheck.json/:authorid', function(req, res) {
 
 app.post('/unfollowauthor.json/:authorid', (req, res) => {
     db.unfollowAuthor(req.session.userId, req.params.authorid)
-        .then(data => {
+        .then(() => {
             res.json({following: false});
         }).catch(err => { console.log(err); });
 });
