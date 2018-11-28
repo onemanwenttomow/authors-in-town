@@ -620,6 +620,5 @@ app.get('*', function(req, res) {
     }
 });
 
-server.listen(8080, function() {
-    console.log("Authors in town up and running!");
-});
+
+server.listen(process.env.PORT || 8080, () => console.log("Authors in town up and running!"));
