@@ -211,8 +211,7 @@ app.post('/addevent.json', (req, res) => {
         req.body.country,
         req.body.eventtime
     )
-        .then((result) => {
-            console.log(result);
+        .then(() => {
             res.json({ success: true });
         }).catch(() => {res.json({ success: false });});
 });
@@ -583,7 +582,6 @@ app.get('/userfollowingauthorcheck.json/:authorid', function(req, res) {
 app.post('/unfollowauthor.json/:authorid', (req, res) => {
     db.unfollowAuthor(req.session.userId, req.params.authorid)
         .then(data => {
-            console.log(data);
             res.json({following: false});
         }).catch(err => { console.log(err); });
 });
@@ -591,7 +589,6 @@ app.post('/unfollowauthor.json/:authorid', (req, res) => {
 app.post('/followauthor.json/:authorid', (req, res) => {
     gr.getAuthorInfo(req.params.authorid)
         .then(data => {
-            console.log(data);
             db.insertNewAuthor(
                 data.name,
                 req.session.userId,
@@ -599,8 +596,7 @@ app.post('/followauthor.json/:authorid', (req, res) => {
                 data.author_followers_count,
                 req.params.authorid
             )
-                .then(data => {
-                    console.log(data);
+                .then(() => {
                     res.json({following: true});
                 }).catch(err => { console.log(err); });
         }).catch(err => { console.log(err); });
