@@ -115,8 +115,8 @@ class MainEvents extends React.Component {
                 <div className="main-events-container">
                     { this.props.allevents.map(
                         event => (
-                            <div className="event" key={event.id}>
-                                <Link to={`/author/${new Date().getTime()+ Math.random()}`} >
+                            <div className="event" key={new Date().getTime()+ Math.random()}>
+                                <Link to={`/author/${event.goodreads_id}`} >
                                     <div>
                                         <img className="eventphoto" src={event.author_pic_url} alt={event.name}/>
                                         <div className="datebox">

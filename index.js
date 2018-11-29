@@ -42,6 +42,8 @@ console.log("array of authors: ", bigList.length );
 const gr = goodreads(myCredentials);
 gr.initOAuth('http://localhost:8080/');
 
+console.log(gr);
+
 const app = express();
 
 const server = require('http').Server(app);
