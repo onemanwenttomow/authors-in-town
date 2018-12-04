@@ -31,16 +31,22 @@ if (process.env.NODE_ENV === 'production') {
     secrets = require('./secrets');
 }
 
+let bigList = authors2.getPanMac();
+console.log("array of authors: ", bigList.length );
 
 const myCredentials = {
     key: secrets.key,
     secret: secrets.secret
 };
-let bigList = authors2.getPanMac();
-console.log("array of authors: ", bigList.length );
 
 const gr = goodreads(myCredentials);
-gr.initOAuth('http://localhost:8080/');
+
+if (process.env.NODE_ENV === 'production') {
+    gr.initOAuth('https://authorsintown.herokuapp.com/');
+} else {
+    gr.initOAuth('http://localhost:8080/');
+
+}
 
 console.log(gr);
 

@@ -31,6 +31,8 @@
         "csurf": "^1.9.0",
         "express": "^4.14.0",
         "express-session": "^1.15.6",
+        "goodreads-api-fix-pete": "0.0.3",
+        "goodreads-api-fix-peter": "0.0.3",
         "goodreads-api-node": "0.0.5",
         "http-proxy-middleware": "^0.17.4",
         "knox": "^0.9.2",
