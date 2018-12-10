@@ -1692,7 +1692,6 @@ let panMacAuthors = [
     "Judith Mackrell",
     "Kyle MacLachlan",
     "Harold Macmillan",
-    "Macmillan",
     "Patricia Macnair",
     "Elizabeth Macneal",
     "Beth Macy",

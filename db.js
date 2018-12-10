@@ -301,3 +301,8 @@ exports.insertNewLongListAuthor = function(name) {
     const params = [name || null];
     return db.query(q, params);
 };
+
+exports.getAllLongListAuthors = function() {
+    const q = `SELECT * FROM authorlonglist`;
+    return db.query(q);
+};

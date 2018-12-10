@@ -9,6 +9,7 @@ CREATE TABLE goodreadsevents (
     venue_name VARCHAR(200) NOT NULL,
     town VARCHAR(255) NOT NULL,
     country VARCHAR(200) NOT NULL,
+    url VARCHAR(500),
     event_time VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

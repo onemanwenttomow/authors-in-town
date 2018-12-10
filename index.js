@@ -48,8 +48,6 @@ if (process.env.NODE_ENV === 'production') {
 
 }
 
-console.log(gr);
-
 const app = express();
 
 const server = require('http').Server(app);
@@ -322,7 +320,7 @@ app.get('/token.json', (req, res) => {
                                 ))
                             );
 
-                            console.log("there should be this number of authors: ", authorsArray.length);
+                            console.log("there should be this number of authors: ", authorsArray);
                             res.json({uniqueAuthors: uniqueAuthors});
                             for (let i = 0; i < uniqueAuthors.length; i++) {
                                 db.insertNewAuthor(
@@ -333,7 +331,7 @@ app.get('/token.json', (req, res) => {
                                     uniqueAuthors[i].goodreads_id,
                                 );
                             }
-                        }).catch(err => {console.log(err);});
+                        }).catch(err => { console.log(err); });
                 }).catch(err => { console.log(err); });
         }).catch(err => {console.log(err);});
 });
@@ -422,17 +420,19 @@ app.get('/testingevents', (req, res) => {
     };
     axios.get('https://api.list.co.uk/v1/search?query=signing&page=5', config)
         .then((response) => {
+            console.log(response);
             for (let i = 0; i < response.data.length; i++) {
                 if (response.data[i].tags[0] == 'books') {
-                    db.insertTheListingEvent(
-                        response.data[i].name,
-                        response.data[i].place_name,
-                        response.data[i].town,
-                        response.data[i].start_ts
-                    )
-                        .then((data) => {
-                            console.log(data);
-                        }).catch(err => { console.log(err); });
+                    console.log(response);
+                    // db.insertTheListingEvent(
+                    //     response.data[i].name,
+                    //     response.data[i].place_name,
+                    //     response.data[i].town,
+                    //     response.data[i].start_ts
+                    // )
+                    //     .then((data) => {
+                    //         console.log(data);
+                    //     }).catch(err => { console.log(err); });
                 }
             }
             res.json(response.data);
@@ -442,12 +442,51 @@ app.get('/testingevents', (req, res) => {
 });
 
 app.get('/eventbrite', (req, res) => {
-    axios.get('https://www.eventbriteapi.com/v3/events/search/?q=waterstones&location.address=gb&token=2SEOR22VPGMINMOYPLBO')
-        .then((response) => {
-            res.json(response.data);
-        }).catch((error) => {
-            console.log(error);
-        });
+    const authors1Arr = authors.getHarperAuthors();
+    const authors2Arr = authors2.getPanMac();
+    const authorsArr = authors1Arr.concat(authors2Arr);
+    const uniqueAuthors = authorsArr.filter(function(item, pos) {
+        return authorsArr.indexOf(item) == pos;
+    });
+    let eventBriteEvents = [];
+    console.log("number of unique authors: ", uniqueAuthors.length);
+    let q = `https://www.eventbriteapi.com/v3/events/search/?q=waterstones&token=${secrets.oauth}`;
+    getEvents(q);
+    function getEvents(str) {
+        axios.get(str)
+            .then((response) => {
+                for (let i = 0; i < response.data.events.length; i++) {
+                    for (let j = 0; j < uniqueAuthors.length; j++) {
+                        if (response.data.events[i].name.text.indexOf(uniqueAuthors[j]) > -1) {
+                            eventBriteEvents.push({
+                                name: uniqueAuthors[j],
+                                event_name: response.data.events[i].name.text,
+                                venueId: response.data.events[i].venue_id,
+                                url: response.data.events[i].url,
+                                event_time: response.data.events[i].start.local
+                            });
+                        }
+                    }
+                }
+                let pageNumber = response.data.pagination.page_number + 1;
+                if (response.data.pagination.has_more_items) {
+                    getEvents(q + `&page=${pageNumber}`);
+                } else {
+                    console.log("eventBriteEvents Array: ", eventBriteEvents);
+                    for (let k = 0; k < eventBriteEvents.length; k++) {
+                        axios.get(`https://www.goodreads.com/api/author_url/${eventBriteEvents[k].name}?key=${secrets.key}`)
+                            .then(data => {
+                                let xml = data.data;
+                                let result1 = convert.xml2json(xml, {compact: true, spaces: 4});
+                                let obj = JSON.parse(result1);
+                                console.log(obj.GoodreadsResponse.author._attributes.id);
+                            }).catch(err => { console.log(err); });
+                    }
+                    res.json({success: true});
+                }
+            }).catch((error) => { console.log(error); });
+    }
+
 });
 
 app.get('/goodreadsevents/:countrycode', (req, res) => {
