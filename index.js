@@ -473,16 +473,32 @@ app.get('/eventbrite', (req, res) => {
                     getEvents(q + `&page=${pageNumber}`);
                 } else {
                     console.log("eventBriteEvents Array: ", eventBriteEvents);
+                    let config = {
+                        headers: {
+                            'Authorization': "Bearer " + secrets.oauth,
+                            'Content-Type': 'application/json'
+                        }
+                    };
+                    // empty array
                     for (let k = 0; k < eventBriteEvents.length; k++) {
+                        //x2 push axios call into array.
+                        //eventbriteArray.push(axios.get(`https://www.goodreads.com/api/author_url/${eventBriteEvents[k].name}?key=${secrets.key}`))
                         axios.get(`https://www.goodreads.com/api/author_url/${eventBriteEvents[k].name}?key=${secrets.key}`)
                             .then(data => {
                                 let xml = data.data;
                                 let result1 = convert.xml2json(xml, {compact: true, spaces: 4});
                                 let obj = JSON.parse(result1);
-                                console.log(obj.GoodreadsResponse.author._attributes.id);
+                                eventBriteEvents[k].goodreads_id = obj.GoodreadsResponse.author._attributes.id;
+                            }).catch(err => { console.log(err); });
+                        axios.get(`https://www.eventbriteapi.com/v3/venues/${eventBriteEvents[k].venueId}/`, config)
+                            .then(data => {
+                                eventBriteEvents[k].venue_name = data.data.name;
+                                eventBriteEvents[k].town = data.data.address.city;
+                                eventBriteEvents[k].country = data.data.address.country;
                             }).catch(err => { console.log(err); });
                     }
-                    res.json({success: true});
+                    //Promise.all stuff....
+                    res.json({success: eventBriteEvents});
                 }
             }).catch((error) => { console.log(error); });
     }
