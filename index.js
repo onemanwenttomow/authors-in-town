@@ -450,7 +450,7 @@ app.get('/eventbrite', (req, res) => {
     });
     let eventBriteEvents = [];
     console.log("number of unique authors: ", uniqueAuthors.length);
-    let q = `https://www.eventbriteapi.com/v3/events/search/?q=waterstones&token=${secrets.oauth}`;
+    let q = `https://www.eventbriteapi.com/v3/events/search/?q=signing&token=${secrets.oauth}`;
     getEvents(q);
     function getEvents(str) {
         axios.get(str)
@@ -469,40 +469,48 @@ app.get('/eventbrite', (req, res) => {
                     }
                 }
                 let pageNumber = response.data.pagination.page_number + 1;
-                if (response.data.pagination.has_more_items) {
+                if (pageNumber <= 200 && response.data.pagination.has_more_items) {
                     getEvents(q + `&page=${pageNumber}`);
+                    console.log(`checking page: ${pageNumber}`);
+                    console.log("number of events: ", eventBriteEvents.length);
                 } else {
-                    console.log("eventBriteEvents Array: ", eventBriteEvents);
+                    console.log("eventBriteEvents Array: ", eventBriteEvents.length);
                     let config = {
                         headers: {
                             'Authorization': "Bearer " + secrets.oauth,
                             'Content-Type': 'application/json'
                         }
                     };
-                    // empty array
+                    let eventsPromiseArray = [];
                     for (let k = 0; k < eventBriteEvents.length; k++) {
-                        //x2 push axios call into array.
-                        //eventbriteArray.push(axios.get(`https://www.goodreads.com/api/author_url/${eventBriteEvents[k].name}?key=${secrets.key}`))
-                        axios.get(`https://www.goodreads.com/api/author_url/${eventBriteEvents[k].name}?key=${secrets.key}`)
-                            .then(data => {
-                                let xml = data.data;
+                        eventsPromiseArray.push(axios.get(`https://www.goodreads.com/api/author_url/${eventBriteEvents[k].name}?key=${secrets.key}`));
+                    }
+                    Promise.all(eventsPromiseArray)
+                        .then(data => {
+                            for (let i = 0; i < data.length; i++) {
+                                let xml = data[i].data;
                                 let result1 = convert.xml2json(xml, {compact: true, spaces: 4});
                                 let obj = JSON.parse(result1);
-                                eventBriteEvents[k].goodreads_id = obj.GoodreadsResponse.author._attributes.id;
-                            }).catch(err => { console.log(err); });
-                        axios.get(`https://www.eventbriteapi.com/v3/venues/${eventBriteEvents[k].venueId}/`, config)
-                            .then(data => {
-                                eventBriteEvents[k].venue_name = data.data.name;
-                                eventBriteEvents[k].town = data.data.address.city;
-                                eventBriteEvents[k].country = data.data.address.country;
-                            }).catch(err => { console.log(err); });
-                    }
-                    //Promise.all stuff....
-                    res.json({success: eventBriteEvents});
+                                eventBriteEvents[i].goodreads_id = obj.GoodreadsResponse.author._attributes.id;
+                            }
+                            let venuesPromiseArray = [];
+                            for (let k = 0; k < eventBriteEvents.length; k++) {
+                                venuesPromiseArray.push(axios.get(`https://www.eventbriteapi.com/v3/venues/${eventBriteEvents[k].venueId}/`, config));
+                            }
+                            Promise.all(venuesPromiseArray)
+                                .then(data => {
+                                    for (let i = 0; i < data.length; i++) {
+                                        eventBriteEvents[i].venue_name = data[i].data.name;
+                                        eventBriteEvents[i].town = data[i].data.address.city;
+                                        eventBriteEvents[i].country = data[i].data.address.country;
+                                    }
+                                    console.log(eventBriteEvents.length);
+                                    res.json({success: eventBriteEvents});
+                                }).catch(err => { console.log(err); });
+                        }).catch(err => { console.log(err); });
                 }
             }).catch((error) => { console.log(error); });
     }
-
 });
 
 app.get('/goodreadsevents/:countrycode', (req, res) => {
