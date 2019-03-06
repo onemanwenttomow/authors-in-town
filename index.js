@@ -291,7 +291,8 @@ app.get('/authgoodreads.json', (req, res) => {
 
 app.get('/token.json', (req, res) => {
     gr.getAccessToken()
-        .then(() => {
+        .then((data) => {
+            console.log("data after access token: ", data);
             console.log("MADE IT TO ACCESS TOKEN");
             gr.getCurrentUserInfo()
                 .then(data => {

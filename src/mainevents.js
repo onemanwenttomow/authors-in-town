@@ -111,7 +111,8 @@ class MainEvents extends React.Component {
                         )
                     )}
                 </div>
-                <h2>Other events <span className="blue">outside of {this.props.userInfo.data.country}</span> <Link to="/eventsoutofcountry" >(see more)</Link></h2>
+                <h2>!!!!!!!!Events by Authors you like in outside of <span className="blue">{this.props.userInfo.data.country}</span> <Link to="/eventsoutofcountry" >(see more)</Link></h2>
+
                 <div className="main-events-container">
                     { this.props.allevents.map(
                         event => (
