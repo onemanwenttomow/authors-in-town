@@ -178,8 +178,6 @@ app.post('/updatelocation.json', (req, res) => {
 });
 
 app.post('/updateprofile', (req, res) => {
-    console.log("Old pass: ", req.body.oldpassword);
-    console.log("Old pass: ", req.body.password);
     if (req.body.password == '') {
         db.updateUserProfile(
             req.session.userId,
@@ -469,12 +467,11 @@ app.get('/eventbrite', (req, res) => {
                     }
                 }
                 let pageNumber = response.data.pagination.page_number + 1;
-                if (pageNumber <= 200 && response.data.pagination.has_more_items) {
+                if (pageNumber <= 20 && response.data.pagination.has_more_items) {
                     getEvents(q + `&page=${pageNumber}`);
                     console.log(`checking page: ${pageNumber}`);
                     console.log("number of events: ", eventBriteEvents.length);
                 } else {
-                    console.log("eventBriteEvents Array: ", eventBriteEvents.length);
                     let config = {
                         headers: {
                             'Authorization': "Bearer " + secrets.oauth,
@@ -484,6 +481,7 @@ app.get('/eventbrite', (req, res) => {
                     let eventsPromiseArray = [];
                     for (let k = 0; k < eventBriteEvents.length; k++) {
                         eventsPromiseArray.push(axios.get(`https://www.goodreads.com/api/author_url/${eventBriteEvents[k].name}?key=${secrets.key}`));
+                        console.log("author id pushed!");
                     }
                     Promise.all(eventsPromiseArray)
                         .then(data => {
@@ -495,7 +493,11 @@ app.get('/eventbrite', (req, res) => {
                             }
                             let venuesPromiseArray = [];
                             for (let k = 0; k < eventBriteEvents.length; k++) {
-                                venuesPromiseArray.push(axios.get(`https://www.eventbriteapi.com/v3/venues/${eventBriteEvents[k].venueId}/`, config));
+                                if (eventBriteEvents[k].venueId) {
+                                    venuesPromiseArray.push(axios.get(`https://www.eventbriteapi.com/v3/venues/${eventBriteEvents[k].venueId}/`, config));
+                                } else {
+                                    venuesPromiseArray.push(axios.get(`https://www.eventbriteapi.com/v3/venues/27308815/`));
+                                }
                             }
                             Promise.all(venuesPromiseArray)
                                 .then(data => {
@@ -504,7 +506,7 @@ app.get('/eventbrite', (req, res) => {
                                         eventBriteEvents[i].town = data[i].data.address.city;
                                         eventBriteEvents[i].country = data[i].data.address.country;
                                     }
-                                    console.log(eventBriteEvents.length);
+                                    console.log(eventBriteEvents);
                                     res.json({success: eventBriteEvents});
                                 }).catch(err => { console.log(err); });
                         }).catch(err => { console.log(err); });

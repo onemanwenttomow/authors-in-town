@@ -21,7 +21,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     'Waterstones Berlin',
     'Berlin',
     'Germany',
-    '2018-11-17T21:30'
+    '2019-04-17T21:30'
 );
 
 INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
@@ -32,7 +32,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     'Waterstones Munich',
     'Munich',
     'Germany',
-    '2018-11-18T21:30'
+    '2019-04-18T21:30'
 );
 
 INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
@@ -43,7 +43,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     'Waterstones Oxford',
     'Oxford',
     'UK',
-    '2018-11-19T21:30'
+    '2019-04-19T21:30'
 );
 
 INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
@@ -54,7 +54,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     'A Lovely Bookshop Berlin',
     'Berlin',
     'Germany',
-    '2018-11-22T19:30'
+    '2019-04-22T19:30'
 );
 
 INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
@@ -65,7 +65,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     'Bookshop Leipzig',
     'Leipzig',
     'Germany',
-    '2018-11-23T19:30'
+    '2019-04-23T19:30'
 );
 
 INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
@@ -76,7 +76,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     'Bookshop Berlin',
     'Berlin',
     'Germany',
-    '2018-11-25T19:30'
+    '2019-04-25T19:30'
 );
 
 INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
@@ -87,7 +87,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     'Bookshop Leipzig',
     'Leipzig',
     'Germany',
-    '2018-11-26T19:30'
+    '2019-04-26T19:30'
 );
 
 INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
@@ -98,7 +98,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     'Bookshop Berlin',
     'Berlin',
     'Germany',
-    '2018-11-28T19:30'
+    '2019-04-28T19:30'
 );
 
 INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
@@ -109,7 +109,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     'Bookshop Leipzig',
     'Leipzig',
     'Germany',
-    '2018-11-29T19:30'
+    '2019-04-29T19:30'
 );
 
 INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
@@ -120,7 +120,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     'Bookshop Berlin',
     'Berlin',
     'Germany',
-    '2018-11-29T19:30'
+    '2019-04-29T19:30'
 );
 
 INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
@@ -131,7 +131,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     'Bookshop Leipzig',
     'Leipzig',
     'Germany',
-    '2018-11-30T19:30'
+    '2019-04-30T19:30'
 );
 
 INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
@@ -142,7 +142,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     'Bookshop Berlin',
     'Berlin',
     'Germany',
-    '2018-12-01T19:30'
+    '2019-04-01T19:30'
 );
 
 INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
@@ -153,7 +153,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     'Bookshop Leipzig',
     'Leipzig',
     'Germany',
-    '2018-12-02T19:30'
+    '2018-04-02T19:30'
 );
 
 INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
@@ -164,7 +164,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     'Bookshop Berlin',
     'Berlin',
     'Germany',
-    '2018-12-01T19:30'
+    '2018-04-01T19:30'
 );
 
 INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
@@ -175,7 +175,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     'Bookshop Leipzig',
     'Leipzig',
     'Germany',
-    '2018-12-02T19:30'
+    '2019-04-02T19:30'
 );
 
 INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
@@ -186,7 +186,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     'Rhydypennau Library,',
     'Cardiff',
     'UK',
-    '2019-01-16T19:00'
+    '2019-04-16T19:00'
 );
 
 INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
@@ -197,7 +197,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     'Politics & Prose Bookstore',
     'Washington',
     'USA',
-    '2019-02-18T19:00'
+    '2019-04-18T19:00'
 );
 
 INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
@@ -208,7 +208,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     'Quail Ridge Books',
     'Raleigh',
     'USA',
-    '2019-02-19T19:00'
+    '2019-04-19T19:00'
 );
 
 INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
@@ -219,7 +219,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     'Ethical Society of St. Louis',
     'St. Louis',
     'USA',
-    '2019-02-20T19:00'
+    '2019-04-20T19:00'
 );
 
 INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
@@ -230,7 +230,7 @@ INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, c
     'Murder by the Book',
     'Houston',
     'USA',
-    '2019-02-21T18:30'
+    '2019-04-21T18:30'
 );
 
 INSERT INTO events (user_id, name, goodreads_id, event_name, venue_name, town, country, event_time) VALUES (
