@@ -12,7 +12,7 @@ export function Welcome() {
             <div className="container">
                 <div className="header">
                     <div>
-                        <Link className="no-underline" to="/login"><p className="logo"><i className="logo logohover far fa-bookmark"></i> Authors<span className="pink">In</span>Town</p></Link>
+                        <Link className="no-underline" to="/login"><p className="logo"><i className="logo logohover far fa-bookmark"></i> <span className="textlogo">Authors<span className="pink">In</span>Town</span></p></Link>
                     </div>
                     <div>
                         <Link className="btn menubtn" to="/login">Login</Link>

@@ -1,8 +1,6 @@
 const redis = require('redis');
-const client = redis.createClient({
-    host: 'localhost',
-    port: 6379
-});
+const client = redis.createClient(process.env.REDIS_URL || {host:'localhost', port: 6379});
+
 
 const {promisify} = require('util');
 

@@ -7,7 +7,6 @@ const multer            = require('multer');
 const uidSafe           = require('uid-safe');
 const path              = require('path');
 const axios             = require('axios');
-const url               = require('url');
 const convert           = require('xml-js');
 const cheerio           = require('cheerio');
 const request           = require('request');
@@ -16,13 +15,24 @@ const auth              = require('./auth.js');
 const checkPass         = require('./passwordcheck.js');
 const db                = require('./db.js');
 const happy             = require('./happy.js');
+const non               = require('./nonauthors.js');
+const authors           = require('./realauthors.js');
+const authors2          = require('./realauthors2.js');
 const s3                = require('./s3.js');
 const s3url             = require('./config.json');
-const secrets           = require('./secrets');
 const redis             = require('./redis');
 const session           = require('express-session');
 const Store             = require('connect-redis')(session);
 
+let secrets;
+if (process.env.NODE_ENV === 'production') {
+    secrets = process.env;
+} else {
+    secrets = require('./secrets');
+}
+
+let bigList = authors2.getPanMac();
+console.log("array of authors: ", bigList.length );
 
 const myCredentials = {
     key: secrets.key,
@@ -30,16 +40,20 @@ const myCredentials = {
 };
 
 const gr = goodreads(myCredentials);
-gr.initOAuth('http://localhost:8080/');
+
+if (process.env.NODE_ENV === 'production') {
+    gr.initOAuth('https://authorsintown.herokuapp.com/');
+} else {
+    gr.initOAuth('http://localhost:8080/');
+
+}
 
 const app = express();
 
-const server            = require('http').Server(app);
-const io                = require('socket.io')(server, { origins: 'localhost:8080' });
+const server = require('http').Server(app);
+const io = require('socket.io')(server, { origins: 'localhost:8080' });
 
 app.use(compression());
-
-
 
 const diskStorage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -94,13 +108,21 @@ if (process.env.NODE_ENV != 'production') {
 
 app.use(express.static('public'));
 
-app.use(session({
-    store: new Store({
-        ttl: 3600, //1 hour
+var store = {};
+if(process.env.REDIS_URL){
+    store = {
+        url: process.env.REDIS_URL
+    };
+} else {
+    store = {
+        ttl: 3600, //time to live
         host: 'localhost',
         port: 6379
-    }),
-    resave: false,
+    };
+}
+app.use(session({
+    store: new Store(store),
+    resave: true,
     saveUninitialized: true,
     secret: secrets.redis_secret
 }));
@@ -156,8 +178,6 @@ app.post('/updatelocation.json', (req, res) => {
 });
 
 app.post('/updateprofile', (req, res) => {
-    console.log("Old pass: ", req.body.oldpassword);
-    console.log("Old pass: ", req.body.password);
     if (req.body.password == '') {
         db.updateUserProfile(
             req.session.userId,
@@ -206,8 +226,7 @@ app.post('/addevent.json', (req, res) => {
         req.body.country,
         req.body.eventtime
     )
-        .then((result) => {
-            console.log(result);
+        .then(() => {
             res.json({ success: true });
         }).catch(() => {res.json({ success: false });});
 });
@@ -231,7 +250,8 @@ app.get('/getuserinfo.json', function(req, res) {
 });
 
 app.get('/getauthorsevents.json', function(req, res) {
-    db.getAuthorEvents(req.session.userId)
+    let currentDate2 = new Date().toISOString().slice(0,10);
+    db.getAuthorEvents(req.session.userId, currentDate2)
         .then(data => {
             res.json({ data: data.rows });
         }).catch(err => { console.log(err); });
@@ -245,7 +265,8 @@ app.get('/getauthorbyid.json/:id', function(req, res) {
 });
 
 app.get('/getauthorseventsbyid.json/:id', function(req, res) {
-    db.getAuthorEventsByGoodReadsId(req.params.id)
+    let currentDate3 = new Date().toISOString().slice(0,10);
+    db.getAuthorEventsByGoodReadsId(req.params.id, currentDate3)
         .then(data => {
             res.json({ data: data.rows });
         }).catch(err => { console.log(err); });
@@ -269,22 +290,19 @@ app.get('/authgoodreads.json', (req, res) => {
 });
 
 app.get('/token.json', (req, res) => {
-    console.log("MADE IT HERE!!!");
     gr.getAccessToken()
         .then((data) => {
             console.log("data after access token: ", data);
             console.log("MADE IT TO ACCESS TOKEN");
-            gr.followAuthor(4432)
-                .then((data) => {
-                    req.session.goodReadsId = data.author_following.user.id;
+            gr.getCurrentUserInfo()
+                .then(data => {
+                    req.session.goodReadsId = data.user.id;
                     axios.get(`https://www.goodreads.com/review/list/${req.session.goodReadsId}.xml?key=${secrets.key}&shelf=read&per_page=200&v=2`)
                         .then((data) => {
                             console.log("converting...");
                             let xml = data.data;
                             let result1 = convert.xml2json(xml, {compact: true, spaces: 4});
                             let obj = JSON.parse(result1);
-                            console.log("should be finished");
-                            console.log("Info about authors: ", obj.GoodreadsResponse.reviews.review[2].book.authors.author.id._text);
 
                             let authorsArray = [];
                             for (var i = 0; i < obj.GoodreadsResponse.reviews.review.length; i++) {
@@ -301,7 +319,7 @@ app.get('/token.json', (req, res) => {
                                 ))
                             );
 
-                            console.log(uniqueAuthors);
+                            console.log("there should be this number of authors: ", authorsArray);
                             res.json({uniqueAuthors: uniqueAuthors});
                             for (let i = 0; i < uniqueAuthors.length; i++) {
                                 db.insertNewAuthor(
@@ -312,8 +330,8 @@ app.get('/token.json', (req, res) => {
                                     uniqueAuthors[i].goodreads_id,
                                 );
                             }
-                        }).catch(err => {console.log(err);});
-                }).catch(err => {console.log(err);});
+                        }).catch(err => { console.log(err); });
+                }).catch(err => { console.log(err); });
         }).catch(err => {console.log(err);});
 });
 
@@ -333,13 +351,24 @@ app.get('/getauthorbooks.json/:id', (req, res) => {
             } else {
                 gr.getAuthorInfo(req.params.id)
                     .then((data) => {
-                        let stringifyedData = JSON.stringify(data.books.book.slice(0,9));
+                        console.log("books: ", data.books.book);
+                        console.log(Array.isArray(data.books.book));
+                        let stringifyedData;
+                        if (Array.isArray(data.books.book)) {
+                            stringifyedData = JSON.stringify(data.books.book.slice(0,9));
+                        } else {
+                            stringifyedData = JSON.stringify([data.books.book]);
+                        }
                         redis.setex(req.params.id, 60 * 60 * 2, stringifyedData)
                             .then(() => {
                                 return redis.get(req.params.id);
                             }).then(() => {
                                 console.log("rendered from POSGRES");
-                                res.json(data.books.book.slice(0,9));
+                                if (Array.isArray(data.books.book)) {
+                                    res.json(data.books.book.slice(0,9));
+                                } else {
+                                    res.json([data.books.book]);
+                                }
                             });
                     }).catch(err => {console.log(err);});
             }
@@ -347,10 +376,28 @@ app.get('/getauthorbooks.json/:id', (req, res) => {
 });
 
 app.get('/geteventsbyuserid.json', (req, res) => {
-    db.getPopularAuthorEvents(req.session.userId)
+    let currentDate = new Date().toISOString().slice(0,10);
+    db.getPopularAuthorEvents(req.session.userId, currentDate)
         .then((data) => {
             res.json(data.rows);
         }).catch(err => {console.log(err);});
+});
+
+app.get('/getallevents.json', (req, res) => {
+    let date = new Date().toISOString().slice(0,10);
+    db.getAllEvents(date)
+        .then(data => {
+            res.json(data.rows);
+        }).catch(err => { console.log(err); });
+});
+
+app.get('/getmoreevents.json/:id', (req, res) => {
+    let date = new Date().toISOString().slice(0,10);
+    console.log("ID PARAMS: ", typeof req.params.id);
+    db.getMoreEvents(date, req.params.id.toString())
+        .then(data => {
+            res.json(data.rows);
+        }).catch(err => { console.log(err); });
 });
 
 app.get('/search.json/:q', (req, res) => {
@@ -359,10 +406,7 @@ app.get('/search.json/:q', (req, res) => {
             if (data.rows.length == 0 ) {
                 res.json({ data: 'no results', });
             } else {
-                console.log(data.rows);
-                res.json({
-                    data: data.rows
-                });
+                res.json({ data: data.rows });
             }
 
         }).catch(err => { console.log(err); });
@@ -375,18 +419,19 @@ app.get('/testingevents', (req, res) => {
     };
     axios.get('https://api.list.co.uk/v1/search?query=signing&page=5', config)
         .then((response) => {
-            console.log("RES: ", response.data);
+            console.log(response);
             for (let i = 0; i < response.data.length; i++) {
                 if (response.data[i].tags[0] == 'books') {
-                    db.insertTheListingEvent(
-                        response.data[i].name,
-                        response.data[i].place_name,
-                        response.data[i].town,
-                        response.data[i].start_ts
-                    )
-                        .then((data) => {
-                            console.log(data);
-                        }).catch(err => { console.log(err); });
+                    console.log(response);
+                    // db.insertTheListingEvent(
+                    //     response.data[i].name,
+                    //     response.data[i].place_name,
+                    //     response.data[i].town,
+                    //     response.data[i].start_ts
+                    // )
+                    //     .then((data) => {
+                    //         console.log(data);
+                    //     }).catch(err => { console.log(err); });
                 }
             }
             res.json(response.data);
@@ -396,12 +441,79 @@ app.get('/testingevents', (req, res) => {
 });
 
 app.get('/eventbrite', (req, res) => {
-    axios.get('https://www.eventbriteapi.com/v3/events/search/?q=waterstones&location.address=gb&token=2SEOR22VPGMINMOYPLBO')
-        .then((response) => {
-            res.json(response.data);
-        }).catch((error) => {
-            console.log(error);
-        });
+    const authors1Arr = authors.getHarperAuthors();
+    const authors2Arr = authors2.getPanMac();
+    const authorsArr = authors1Arr.concat(authors2Arr);
+    const uniqueAuthors = authorsArr.filter(function(item, pos) {
+        return authorsArr.indexOf(item) == pos;
+    });
+    let eventBriteEvents = [];
+    console.log("number of unique authors: ", uniqueAuthors.length);
+    let q = `https://www.eventbriteapi.com/v3/events/search/?q=signing&token=${secrets.oauth}`;
+    getEvents(q);
+    function getEvents(str) {
+        axios.get(str)
+            .then((response) => {
+                for (let i = 0; i < response.data.events.length; i++) {
+                    for (let j = 0; j < uniqueAuthors.length; j++) {
+                        if (response.data.events[i].name.text.indexOf(uniqueAuthors[j]) > -1) {
+                            eventBriteEvents.push({
+                                name: uniqueAuthors[j],
+                                event_name: response.data.events[i].name.text,
+                                venueId: response.data.events[i].venue_id,
+                                url: response.data.events[i].url,
+                                event_time: response.data.events[i].start.local
+                            });
+                        }
+                    }
+                }
+                let pageNumber = response.data.pagination.page_number + 1;
+                if (pageNumber <= 20 && response.data.pagination.has_more_items) {
+                    getEvents(q + `&page=${pageNumber}`);
+                    console.log(`checking page: ${pageNumber}`);
+                    console.log("number of events: ", eventBriteEvents.length);
+                } else {
+                    let config = {
+                        headers: {
+                            'Authorization': "Bearer " + secrets.oauth,
+                            'Content-Type': 'application/json'
+                        }
+                    };
+                    let eventsPromiseArray = [];
+                    for (let k = 0; k < eventBriteEvents.length; k++) {
+                        eventsPromiseArray.push(axios.get(`https://www.goodreads.com/api/author_url/${eventBriteEvents[k].name}?key=${secrets.key}`));
+                        console.log("author id pushed!");
+                    }
+                    Promise.all(eventsPromiseArray)
+                        .then(data => {
+                            for (let i = 0; i < data.length; i++) {
+                                let xml = data[i].data;
+                                let result1 = convert.xml2json(xml, {compact: true, spaces: 4});
+                                let obj = JSON.parse(result1);
+                                eventBriteEvents[i].goodreads_id = obj.GoodreadsResponse.author._attributes.id;
+                            }
+                            let venuesPromiseArray = [];
+                            for (let k = 0; k < eventBriteEvents.length; k++) {
+                                if (eventBriteEvents[k].venueId) {
+                                    venuesPromiseArray.push(axios.get(`https://www.eventbriteapi.com/v3/venues/${eventBriteEvents[k].venueId}/`, config));
+                                } else {
+                                    venuesPromiseArray.push(axios.get(`https://www.eventbriteapi.com/v3/venues/27308815/`));
+                                }
+                            }
+                            Promise.all(venuesPromiseArray)
+                                .then(data => {
+                                    for (let i = 0; i < data.length; i++) {
+                                        eventBriteEvents[i].venue_name = data[i].data.name;
+                                        eventBriteEvents[i].town = data[i].data.address.city;
+                                        eventBriteEvents[i].country = data[i].data.address.country;
+                                    }
+                                    console.log(eventBriteEvents);
+                                    res.json({success: eventBriteEvents});
+                                }).catch(err => { console.log(err); });
+                        }).catch(err => { console.log(err); });
+                }
+            }).catch((error) => { console.log(error); });
+    }
 });
 
 app.get('/goodreadsevents/:countrycode', (req, res) => {
@@ -473,21 +585,108 @@ app.get('/updateauthorstable', (req, response) => {
 });
 
 app.get('/wiki', (req, response) => {
+    let alphabetArray = non.alphabetArray();
+    // let alphabetArray = ["D"];
 
-    let url = 'https://en.wikipedia.org/wiki/List_of_authors_by_name:_A';
-    request(url, { json: true }, (err, res, body) => {
+    let arrayPromise = [];
+    for (let i = 0; i < alphabetArray.length; i++) {
+        let list = [];
+        let url = `https://en.wikipedia.org/wiki/List_of_authors_by_name:_${alphabetArray[i]}`;
+        request(url, { json: true }, (err, res, body) => {
 
-        if (err) { return console.log(err); }
-        const $ = cheerio.load(body);
-        let authors = $('a').eq(0).attribs;
-        // for (let i = 0; i < as.length; i++ ) {
-        //
-        // }
-        console.log(authors);
-        response.json({success: true});
-    });
+            if (err) { return console.log(err); }
+            const $ = cheerio.load(body);
+            $('h2').nextUntil('.navbox').find('a').each((index, element) => {
+                list.push($(element).text());
+            });
+            let nonAuthors = non.getNonAuthors();
+            list = list.filter( ( el ) => !nonAuthors.includes( el ) );
+
+            // console.log(list);
+            for (let k =0; k < list.length; k++) {
+                arrayPromise.push(db.insertNewLongListAuthor(list[k]));
+            }
+        });
+        // response.json({success: list});
+    }
+    return Promise.all(arrayPromise)
+        .then((data) => {
+            response.json(data);
+        }).catch(err => {console.log(err);});
+
 });
 
+app.get('/schuster', (req, response) => {
+    // let alphabetArray = non.alphabetArray();
+    let alphabetArray = ["A"];
+
+    let arrayPromise = [];
+    for (let i = 0; i < alphabetArray.length; i++) {
+        let list = [];
+        let url = `http://www.simonandschuster.com/authors/browse/${alphabetArray[i]}`;
+        request(url, { json: true }, (err, res, body) => {
+
+            if (err) { return console.log(err); }
+            const $ = cheerio.load(body);
+            console.log($('div').attr('id', 'authors_list'));
+            $('div').attr('id', 'authors_list').nextUntil('.bootstrap').children().find('a').each((index, element) => {
+                list.push($(element).text());
+                // .split(",").reverse().join(" ")
+            });
+            console.log(list);
+            // let nonAuthors = non.getNonAuthors();
+            // list = list.filter( ( el ) => !nonAuthors.includes( el ) );
+            //
+            // // console.log(list);
+            // for (let k =0; k < list.length; k++) {
+            //     arrayPromise.push(db.insertNewLongListAuthor(list[k]));
+            // }
+        });
+        // response.json({success: list});
+    }
+    return Promise.all(arrayPromise)
+        .then((data) => {
+            response.json(data);
+        }).catch(err => {console.log(err);});
+
+});
+
+app.get('/userfollowingauthorcheck.json/:authorid', function(req, res) {
+    console.log(req.params.authorid);
+    db.userFollowingAuthorCheck(req.session.userId, req.params.authorid)
+        .then(data => {
+            console.log(data);
+            if (data.rows.length > 0) {
+                res.json({following: true});
+            } else {
+                res.json({following: false});
+            }
+        }).catch(err => { console.log(err); });
+});
+
+app.post('/unfollowauthor.json/:authorid', (req, res) => {
+    db.unfollowAuthor(req.session.userId, req.params.authorid)
+        .then(() => {
+            res.json({following: false});
+        }).catch(err => { console.log(err); });
+});
+
+app.post('/followauthor.json/:authorid', (req, res) => {
+    gr.getAuthorInfo(req.params.authorid)
+        .then(data => {
+            db.insertNewAuthor(
+                data.name,
+                req.session.userId,
+                data.image_url,
+                data.author_followers_count,
+                req.params.authorid
+            )
+                .then(() => {
+                    res.json({following: true});
+                }).catch(err => { console.log(err); });
+        }).catch(err => { console.log(err); });
+
+});
 
 app.get('/logout', function(req, res) {
     req.session.userId = null;
@@ -503,6 +702,5 @@ app.get('*', function(req, res) {
     }
 });
 
-server.listen(8080, function() {
-    console.log("Authors in town up and running!");
-});
+
+server.listen(process.env.PORT || 8080, () => console.log("Authors in town up and running!"));

@@ -95,17 +95,25 @@ class EditProfile extends React.Component {
         })
             .then(data => {
                 if (data.data.success) {
-                    location.replace('/');
+                    this.setState({ passwordchanged: 'verifysuccess' });
+                    document.getElementById('oldpass').value = '';
+                    document.getElementById('newpass').value = '';
+                    document.getElementById('newpass2').value = '';
+                    this.props.dispatch(getUserInfo());
                 } else {
-                    this.setState({error: true});
+                    this.setState({ error: true });
                 }
             }).catch((err) => { console.log(err);} );
     }
     render() {
         console.log("props in edit profile: ", this.props.userInfo.data);
         return (
-            <div className="main-container-flex">
-                <div className="registerform">
+            <div className="main-container-flex-around">
+                <div>
+                    <h1>{this.props.userInfo.data.first} {this.props.userInfo.data.last}</h1>
+                    <img className="user-profile-pic" src={this.props.userInfo.data.imgurl} alt={this.props.userInfo.data.first}/>
+                </div>
+                <div className="registerform nopadding">
                     <h1> EDIT PROFILE </h1>
                     {this.state.error && <div className="error centre">Please try again, your old password might be wrong.</div>}
                     <label>
@@ -122,18 +130,18 @@ class EditProfile extends React.Component {
                     </ label>
                     <label>
                         Old Password:
-                        <input className={this.state.failedPassValidation} pattern=".{5,}" name="oldpassword" type="password" onChange={this.handleChange}/>
+                        <input id="oldpass" className={this.state.failedPassValidation} pattern=".{5,}" name="oldpassword" type="password" onChange={this.handleChange}/>
                     </ label>
                     <label>
                         New Password (min 5 characters):
-                        <input className={this.state.failedPassValidation} pattern=".{5,}" name="password" type="password" onChange={this.handleChange}/>
+                        <input id="newpass" className={this.state.failedPassValidation} pattern=".{5,}" name="password" type="password" onChange={this.handleChange}/>
                     </ label>
                     <label>
                         Retype you password:
-                        <input className={this.state.failedPassValidation} pattern=".{5,}" name="passwordretype" type="password" onChange={this.handleChange}/>
+                        <input id="newpass2" className={this.state.failedPassValidation} pattern=".{5,}" name="passwordretype" type="password" onChange={this.handleChange}/>
                     </ label>
                     <div className="postform">
-                        <button className="btn" disabled={this.state.isSubmitDisabled} onClick={this.updateprofile}>Update</button>
+                        <button id={this.state.passwordchanged} className="btn" disabled={this.state.isSubmitDisabled} onClick={this.updateprofile}>Update</button>
                     </div>
                 </div>
             </div>

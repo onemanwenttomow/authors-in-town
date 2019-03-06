@@ -9,6 +9,10 @@ if (process.env.NODE_ENV === 'production') {
 const dbUrl = process.env.DATABASE_URL || `postgres:${secrets.dbUser}:${secrets.dbPassword}@localhost:5432/authorsintown`;
 const db = spicedPg(dbUrl);
 
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////         USER            ///////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
 exports.insertNewUser = function(first, last, email, hashedPw) {
     const q = `INSERT INTO users (first, last, email, password, imgurl, city, country)
             VALUES ($1, $2, $3, $4, '/img/robots.png', 'London', 'UK') RETURNING id`;
@@ -86,6 +90,19 @@ exports.updateUserProfileAndPass = function(id, first, last, email, hash) {
     return db.query(q, params);
 };
 
+exports.userFollowingAuthorCheck = function(userId, authorId) {
+    const q = `SELECT name FROM authors WHERE user_id = $1 AND goodreads_id = $2`;
+    const params = [userId || null, authorId || null];
+    return db.query(q, params);
+};
+
+exports.unfollowAuthor = function(userId, authorId) {
+    const q = `DELETE FROM authors WHERE user_id = $1 AND goodreads_id = $2`;
+    const params = [userId || null, authorId || null];
+    return db.query(q, params);
+};
+
+
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////         AUTHORS         ///////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -129,29 +146,66 @@ exports.getCuratedAuthorEvents = function(userid) {
     return db.query(query, params);
 };
 
-exports.getPopularAuthorEvents = function(userid) {
+exports.getPopularAuthorEvents = function(userid, currentDate) {
     const query = `
         SELECT DISTINCT authors.goodreads_id, author_pic_url, venue_name, event_time, goodreadsevents.id, authors.name, popularity_ranking, town, country
         FROM goodreadsevents
         JOIN authors
         ON authors.goodreads_id = goodreadsevents.goodreads_id
         WHERE authors.user_id = $1
+        AND
+        event_time >= $2
+        AND event_time <  '2020-07-01'
         ORDER BY popularity_ranking DESC
         LIMIT 200
     `;
-    const params = [userid || null];
+    const params = [userid || null, currentDate];
     return db.query(query, params);
 };
 
-exports.getAuthorEvents = function(userid) {
+exports.getAuthorEvents = function(userid, currentDate) {
     const query = `
         SELECT DISTINCT authors.name, author_pic_url, venue_name, event_time, goodreadsevents.id, goodreadsevents.goodreads_id
         FROM goodreadsevents
         JOIN authors
         ON authors.goodreads_id = goodreadsevents.goodreads_id
         WHERE goodreadsevents.user_id = $1
+        AND
+        event_time >= $2
+        AND event_time <  '2020-07-01'
     `;
-    const params = [userid || null];
+    const params = [userid || null ,currentDate];
+    return db.query(query, params);
+};
+
+exports.getAllEvents = function(currentDate) {
+    const query = `
+        SELECT DISTINCT authors.name, author_pic_url, venue_name, event_time, goodreadsevents.id, country, town, goodreadsevents.goodreads_id
+        FROM goodreadsevents
+        JOIN authors
+        ON authors.goodreads_id = goodreadsevents.goodreads_id
+        WHERE event_time >= $1
+        AND event_time <  '2020-07-01'
+        ORDER BY event_time
+        LIMIT 20
+    `;
+    const params = [currentDate];
+    return db.query(query, params);
+};
+
+exports.getMoreEvents = function(currentDate, id) {
+    const query = `
+        SELECT DISTINCT authors.name, author_pic_url, venue_name, event_time, goodreadsevents.id, country, town, goodreadsevents.goodreads_id
+        FROM goodreadsevents
+        JOIN authors
+        ON authors.goodreads_id = goodreadsevents.goodreads_id
+        WHERE event_time >= $1
+        AND event_time <  '2020-07-01'
+        AND goodreadsevents.id < $2
+        ORDER BY event_time
+        LIMIT 20
+    `;
+    const params = [currentDate, id];
     return db.query(query, params);
 };
 
@@ -217,24 +271,6 @@ exports.getAuthorNamesFromGoodReadsTable = function() {
 };
 
 
-// exports.insertGoodReadsEvent = function(name, goodreadsId, eventName, venueName, town, country, eventTime) {
-//     const q = `INSERT INTO goodreadsevents (name, goodreads_id, event_name, venue_name, town, country, event_time)
-//             VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`;
-//     const params = [
-//         name || null,
-//         goodreadsId || null,
-//         eventName || null,
-//         venueName || null,
-//         town || null,
-//         country || null,
-//         eventTime || null
-//     ];
-//     return db.query(q, params);
-// };
-
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////         SEARCH          ///////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -251,4 +287,22 @@ exports.incrementalSearchQuery = function(q) {
     `;
     const params = ['%' + q + '%' || null];
     return db.query(query, params);
+};
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+///////////////////         AUTHOR LONG LIST          //////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+exports.insertNewLongListAuthor = function(name) {
+    const q = `INSERT INTO authorlonglist (name)
+            VALUES ($1)`;
+    const params = [name || null];
+    return db.query(q, params);
+};
+
+exports.getAllLongListAuthors = function() {
+    const q = `SELECT * FROM authorlonglist`;
+    return db.query(q);
 };

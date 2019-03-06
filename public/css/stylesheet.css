@@ -3,8 +3,6 @@ body {
     margin: 0;
     background-color: #f5f5f5;
     color: #364f6b;
-    /* overflow-y: hidden; */
-
 }
 
 h1 {
@@ -13,9 +11,7 @@ h1 {
     color: #364f6b;
 }
 
-h2 {
-    font-size: 24px;
-}
+h2 { font-size: 24px; }
 
 a {
     text-decoration: none;
@@ -24,9 +20,8 @@ a {
 
 img { object-fit: cover; }
 
-ul {
-    list-style:none;
-}
+ul { list-style:none; }
+
 ul, li { /* reset the margin and padding */
     margin: 0;
     padding: 5px;
@@ -39,8 +34,6 @@ ul, li { /* reset the margin and padding */
 }
 
 .no-underline { text-decoration: none; }
-
-
 
 .main-container {
     width: 100%;
@@ -55,7 +48,6 @@ ul, li { /* reset the margin and padding */
 
 .main-container-flex {
     width: 100%;
-    /* height: 100vh; */
     max-width: 1050px;
     margin-top: 10px;
     background-color: white;
@@ -68,7 +60,6 @@ ul, li { /* reset the margin and padding */
 
 .main-container-flex-around {
     width: 100%;
-    /* height: 100vh; */
     max-width: 1050px;
     margin-top: 10px;
     background-color: white;
@@ -100,13 +91,17 @@ ul, li { /* reset the margin and padding */
     text-shadow: rgba(255,255,255,0.2) 0px 3px 3px;
 }
 
-.logo > i {
-    padding: 2px;
-}
+.logo > i { padding: 2px; }
 
-.logohover:hover {
-    color: #fc5185;
-}
+.logohover:hover { color: #fc5185; }
+
+#logohighlighted { color: #3fc1c9; }
+
+.none { display: none; }
+
+#getlocation { display: inline; }
+
+.locationmarker:hover { cursor: pointer; }
 
 .header {
     display: flex;
@@ -131,6 +126,8 @@ ul, li { /* reset the margin and padding */
     border: 3px #fc5185 solid;
 }
 
+.profile-pic:hover { cursor: pointer; }
+
 .header-menu {
     overflow: hidden;
     position: absolute;
@@ -141,9 +138,7 @@ ul, li { /* reset the margin and padding */
     z-index: 100;
 }
 
-.menu-item:first-child {
-    padding-top: 0;
-}
+.menu-item:first-child { padding-top: 0; }
 
 .menu-item {
     color: #364f6b;
@@ -155,26 +150,26 @@ ul, li { /* reset the margin and padding */
     cursor: pointer;
 }
 
-.menu-item > p {
-    margin:0;
-}
+.menu-item > p { margin:0; }
 
-.menu-item > a > p {
-    margin:0;
-}
+.menu-item > a > p { margin:0; }
 
-.menu-item:hover {
-    border-bottom: 1px solid #3fc1c9;
-}
+.menu-item:hover { border-bottom: 1px solid #3fc1c9; }
 
-.file {
-    display: none;
-}
+.file { display: none; }
 
 .custom-file-upload {
     width: 100px;
     padding: 0;
 }
+
+.headerspan:hover { color: #3fc1c9; }
+
+/* ///////////////////////////////////////////////////////////////////////// */
+/* ///////////////////       EDIT PROFILE PAGE       ////////////////////// */
+/* ///////////////////////////////////////////////////////////////////////// */
+
+.user-profile-pic { width: 400px; }
 
 /* ///////////////////////////////////////////////////////////////////////// */
 /* ///////////////////         MAIN EVENTS PAGE       ////////////////////// */
@@ -187,7 +182,6 @@ ul, li { /* reset the margin and padding */
     overflow-y: hidden;
     white-space: nowrap;
 }
-
 
 /* ///////////////////////////////////////////////////////////////////////// */
 /* ///////////////////         AUTHOR PROFILE         ////////////////////// */
@@ -235,9 +229,14 @@ h5 {
     margin-top: 5px;
 }
 
+.author-pic-profile {
+    width: 200px;
+}
+
 /* ///////////////////////////////////////////////////////////////////////// */
 /* ///////////////////            EVENTS              ////////////////////// */
 /* ///////////////////////////////////////////////////////////////////////// */
+
 .events-container {
     width: 100%;
 }
@@ -336,6 +335,23 @@ input[type="datetime-local"]:hover {
 
 .alleventslocation {
     width: 600px;
+}
+
+.countries {
+    font-size: 20px;
+}
+
+.countries:hover {
+    color: #3fc1c9;
+    cursor: pointer;
+}
+
+.allcountries {
+    padding-bottom: 30px
+}
+
+#countryhighlighted {
+    color: #fc5185;
 }
 
 /* ///////////////////////////////////////////////////////////////////////// */
@@ -518,12 +534,10 @@ select:-webkit-autofill:focus {
     text-decoration: none;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
     border-radius: 5px;
-    /* box-shadow: 3px 3px #3fc1c9; */
     z-index: 2;
 }
 
 .btn:hover {
-  /* box-shadow: 1px 1px #3fc1c9; */
   top: 1px;
 }
 
@@ -541,7 +555,6 @@ select:-webkit-autofill:focus {
 .btn:disabled:hover,
 .btn[disabled]:hover {
    top: 0px;
-   /* box-shadow: 3px 3px #3fc1c9; */
 }
 
 .menubtn {
@@ -581,6 +594,11 @@ select:-webkit-autofill:focus {
     color: white;
 }
 
+#verifysuccess {
+    background-color: #2ecc71;
+    color: white;
+}
+
 
 /* //////////////////////////////////////////////////////////////////////////// */
 /* ///////////////////////      BACKGROUND VIDEO     ////////////////////////// */
@@ -591,7 +609,6 @@ select:-webkit-autofill:focus {
     border-right: none;
     border-left: none;
     position: relative;
-    /* filter: sepia(1); */
     overflow: hidden;
 
   }
@@ -645,6 +662,7 @@ select:-webkit-autofill:focus {
 
 .pink { color: #fc5185; }
 .blue { color: #3fc1c9; }
+.darkblue { color: #364f6b; }
 
 #bluebackground {
     position: relative;
@@ -654,11 +672,23 @@ select:-webkit-autofill:focus {
 
 .inline { display: inline-block; }
 
+.extraleftpadding {
+    margin-left: 35px;
+}
+
+#blue {
+    background-color: #3fc1c9;
+}
+
+.nopadding {
+    padding-top: 0;
+}
+
 /* ///////////////////////////////////////////////////////////////////////// */
 /* ///////////////////        MOBILE FRIENDLY            /////////////////// */
 /* ///////////////////////////////////////////////////////////////////////// */
 
-@media only screen and (min-width: 560px) and (max-width: 1050px){
+@media only screen and (min-width: 200px) and (max-width: 1050px){
     body {overflow-y:auto;}
     .header { flex-wrap: wrap; }
     .login-container {
@@ -678,9 +708,46 @@ select:-webkit-autofill:focus {
         border-radius: 4px;
         box-shadow: rgba(0, 0, 0, 0.32) 0px 16px 40px
     }
+    .main-container {
+        max-width: 700px;
+    }
 
-}
+    .main-container-flex {
+        max-width: 700px;
+        flex-wrap: wrap;
+    }
 
-@media only screen and (max-width: 600px) {
+    .main-container-flex-around {
+        max-width: 700px;
+        flex-wrap: wrap;
+    }
+    .textlogo {
+        display: none;
+    }
+    .user-header {
+        width: 50px;
+    }
+    .eventsarea {
+        width: 400px;
+    }
+    .author-profile {
+        width: 200px;
+    }
+    .alleventsarea {
+        display: flex;
+        width: 90%
+    }
+    .allevents-cont {
+        width: 90%;
+    }
+    .stretchedevent {
+        flex-wrap: wrap;
+    }
+    .alleventslocation {
+        width: 300px;
+    }
+    .login-container {
+        top: 75vh;
+    }
 
 }

@@ -9,10 +9,13 @@ class Header extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            menuIsVisible: false
+            menuIsVisible: false,
+            logohighlighted: ''
         };
         this.showMenu = this.showMenu.bind(this);
         this.hideMenu = this.hideMenu.bind(this);
+        this.addLogoHighlighted = this.addLogoHighlighted.bind(this);
+        this.removeLogoHighlighted = this.removeLogoHighlighted.bind(this);
     }
     componentDidMount() {
         this.props.dispatch(getUserInfo());
@@ -25,6 +28,12 @@ class Header extends React.Component {
         this.state.menuIsVisible ?
             this.setState({ menuIsVisible: false }) : this.setState({ menuIsVisible: true });
     }
+    addLogoHighlighted() {
+        this.setState({ logohighlighted: 'logohighlighted' });
+    }
+    removeLogoHighlighted() {
+        this.setState({ logohighlighted: '' });
+    }
     render() {
         if (!this.props.userInfo) {
             return null;
@@ -34,7 +43,15 @@ class Header extends React.Component {
                 <div className="header">
                     <div>
                         <Link to="/" className="no-underline">
-                            <p className="logo no-underline"><i className="logo logohover far fa-bookmark"></i> Authors<span className="pink">In</span>Town</p>
+                            <p onMouseEnter ={this.addLogoHighlighted} onMouseLeave={this.removeLogoHighlighted} className="logo no-underline">
+                                <i className="logo logohover far fa-bookmark"></i>
+                                <span className="textlogo">
+                                    &nbsp;Authors
+                                    <span id={this.state.logohighlighted} className="pink headerspan">In</span>
+                                    Town
+                                </span>
+
+                            </p>
                         </Link>
                     </div>
                     <Search/>

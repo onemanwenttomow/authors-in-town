@@ -8,6 +8,7 @@ import EditProfile from './editprofile';
 import MainEvents from './mainevents';
 import Author from './author';
 import AllEventsOutsideOfCountry from './alleventsoutsideofcountry';
+import AllEventsInCountry from './eventsincountry';
 
 
 
@@ -41,6 +42,7 @@ class App extends React.Component {
                             />
                             <Route exact path="/editprofile" component = { EditProfile }/>
                             <Route exact path="/eventsoutofcountry" component = { AllEventsOutsideOfCountry }/>
+                            <Route exact path="/eventsincountry" component = { AllEventsInCountry }/>
                             <Route exact path="/" component = { MainEvents } />
                         </ Switch>
                     </div>
