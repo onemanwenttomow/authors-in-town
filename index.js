@@ -42,7 +42,7 @@ const myCredentials = {
 const gr = goodreads(myCredentials);
 
 if (process.env.NODE_ENV === 'production') {
-    gr.initOAuth('https://authorsintown.herokuapp.com/');
+    gr.initOAuth('https://authors-in-town.herokuapp.com/');
 } else {
     gr.initOAuth('http://localhost:8080/');
 
