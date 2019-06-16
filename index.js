@@ -10,14 +10,15 @@ const axios             = require('axios');
 const convert           = require('xml-js');
 const cheerio           = require('cheerio');
 const request           = require('request');
+const fs                = require('fs');
 const goodreads         = require('goodreads-api-node');
 const auth              = require('./auth.js');
 const checkPass         = require('./passwordcheck.js');
 const db                = require('./db.js');
 const happy             = require('./happy.js');
 const non               = require('./nonauthors.js');
-const authors           = require('./realauthors.js');
-const authors2          = require('./realauthors2.js');
+const theListEvents     = require('./events-data-backup/the-list');
+const eventHelpers      = require('./helper-functions/event-filtering/helpers');
 const s3                = require('./s3.js');
 const s3url             = require('./config.json');
 const redis             = require('./redis');
@@ -31,8 +32,6 @@ if (process.env.NODE_ENV === 'production') {
     secrets = require('./secrets');
 }
 
-let bigList = authors2.getPanMac();
-console.log("array of authors: ", bigList.length );
 
 const myCredentials = {
     key: secrets.key,
@@ -414,39 +413,62 @@ app.get('/search.json/:q', (req, res) => {
 
 app.get('/testingevents', (req, res) => {
     let token= secrets.thelist;
+    let count = 1;
+    let theListEvents = [];
     var config = {
         headers: {'Authorization': "Bearer " + token}
     };
-    axios.get('https://api.list.co.uk/v1/search?query=signing&page=5', config)
-        .then((response) => {
-            console.log(response);
-            for (let i = 0; i < response.data.length; i++) {
-                if (response.data[i].tags[0] == 'books') {
-                    console.log(response);
-                    // db.insertTheListingEvent(
-                    //     response.data[i].name,
-                    //     response.data[i].place_name,
-                    //     response.data[i].town,
-                    //     response.data[i].start_ts
-                    // )
-                    //     .then((data) => {
-                    //         console.log(data);
-                    //     }).catch(err => { console.log(err); });
+    const getTheListEvents = () => {
+        axios.get(`https://api.list.co.uk/v1/search?query=signing&page=${count}`, config)
+            .then((response) => {
+                console.log("response data: ", response.data);
+                if (response.data.length == 0) {
+                    console.log("theListEvents: ", theListEvents);
+                    res.json(theListEvents);
+                    return;
                 }
+                for (let i = 0; i < response.data.length; i++) {
+                    if (response.data[i].tags.includes('books')) {
+                        theListEvents.push(response.data[i]);
+                    }
+                }
+                count++;
+                getTheListEvents();
+            }).catch((error) => {
+                console.log(error);
+            });
+    };
+    getTheListEvents();
+});
+
+
+app.get("/thelistfilter", (req, res) => {
+    console.log("made it to thelistfilter");
+    const uniqueAuthors = eventHelpers.getUniqueArrayOfAuthors();
+
+    console.log("uniqueAuthors length : ", uniqueAuthors.length);
+    let uniqueEvents = [];
+    for (let i = 0; i < theListEvents.length; i++) {
+        for (let j = 0; j < uniqueAuthors.length; j++) {
+            if (theListEvents[i].name.indexOf(uniqueAuthors[j]) > -1) {
+                console.log(theListEvents[i]);
+                uniqueEvents.push(theListEvents[i]);
             }
-            res.json(response.data);
-        }).catch((error) => {
-            console.log(error);
-        });
+        }
+    }
+    fs.writeFileSync(
+        'events-data-backup/the-list-filtered.json',
+        JSON.stringify(
+            uniqueEvents,
+            null,
+            4
+        )
+    );
+    res.json({success: true});
 });
 
 app.get('/eventbrite', (req, res) => {
-    const authors1Arr = authors.getHarperAuthors();
-    const authors2Arr = authors2.getPanMac();
-    const authorsArr = authors1Arr.concat(authors2Arr);
-    const uniqueAuthors = authorsArr.filter(function(item, pos) {
-        return authorsArr.indexOf(item) == pos;
-    });
+    const uniqueAuthors = eventHelpers.getUniqueArrayOfAuthors();
     let eventBriteEvents = [];
     console.log("number of unique authors: ", uniqueAuthors.length);
     let q = `https://www.eventbriteapi.com/v3/events/search/?q=signing&token=${secrets.oauth}`;
@@ -508,6 +530,14 @@ app.get('/eventbrite', (req, res) => {
                                         eventBriteEvents[i].country = data[i].data.address.country;
                                     }
                                     console.log(eventBriteEvents);
+                                    fs.writeFileSync(
+                                        'events-data-backup/eventbrite-events-cleaned.json',
+                                        JSON.stringify(
+                                            eventBriteEvents,
+                                            null,
+                                            4
+                                        )
+                                    );
                                     res.json({success: eventBriteEvents});
                                 }).catch(err => { console.log(err); });
                         }).catch(err => { console.log(err); });

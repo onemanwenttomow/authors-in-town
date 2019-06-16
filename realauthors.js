@@ -13353,7 +13353,6 @@ let harperAuthors = [
     "Reader tbd 1",
     "Kate Reading",
     "Mike Reagan",
-    "Ronald Reagan",
     "Danuta Reah",
     "Danuta Reah",
     "Maria Realf",

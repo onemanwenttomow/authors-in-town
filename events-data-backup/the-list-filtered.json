@@ -1,0 +1,22 @@
+[
+    {
+        "event_id": "00007014-f542-bb9a-aa94-712500059104",
+        "name": "Julia Donaldson: Book Signing",
+        "tags": [
+            "author events",
+            "book signing",
+            "book signing",
+            "books",
+            "literary"
+        ],
+        "place_id": "0000d4a2-4942-bb9a-2b06-39150000cd72",
+        "start_ts": "2019-06-18T15:00:00.000Z",
+        "end_ts": "2019-06-18T15:00:00.000Z",
+        "place_name": "Jaffe and Neale Bookshop",
+        "town": "Chipping Norton",
+        "postal_code": "OX7 5NH",
+        "lat": "51.94242",
+        "lng": "-1.54509",
+        "performance_count": 1
+    }
+]

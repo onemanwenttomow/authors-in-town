@@ -1,0 +1,79 @@
+[
+    {
+        "name": "Daniel Silva",
+        "event_name": "Daniel Silva signs THE NEW GIRL",
+        "venueId": "33187239",
+        "url": "https://www.eventbrite.com/e/daniel-silva-signs-the-new-girl-tickets-60226344618?aff=ebapi",
+        "event_time": "2019-07-20T19:00:00",
+        "goodreads_id": "29085",
+        "venue_name": "The Poisoned Pen Bookstore",
+        "town": "Scottsdale",
+        "country": "US"
+    },
+    {
+        "name": "Karen White",
+        "event_name": "Karen White Book Talk and Signing",
+        "venueId": "32040262",
+        "url": "https://www.eventbrite.com/e/karen-white-book-talk-and-signing-tickets-61473251149?aff=ebapi",
+        "event_time": "2019-10-29T18:00:00",
+        "goodreads_id": "160033",
+        "venue_name": "Fiction Addiction",
+        "town": "Greenville",
+        "country": "US"
+    },
+    {
+        "name": "Andrea Warren",
+        "event_name": "Norman Mineta & Andrea Warren Book Signing",
+        "venueId": "32925163",
+        "url": "https://www.eventbrite.com/e/norman-mineta-andrea-warren-book-signing-tickets-62725622024?aff=ebapi",
+        "event_time": "2019-06-19T19:00:00",
+        "goodreads_id": "30704",
+        "venue_name": "SJSU Hammer Theatre Center",
+        "town": "San Jose",
+        "country": "US"
+    },
+    {
+        "name": "Ivy Pochoda ",
+        "event_name": "Ivy Pochoda \"Wonder Valley\" Reading & Book signing ",
+        "venueId": "31875836",
+        "url": "https://www.eventbrite.com/e/ivy-pochoda-wonder-valley-reading-book-signing-tickets-59821532815?aff=ebapi",
+        "event_time": "2019-06-21T19:00:00",
+        "goodreads_id": "2898450",
+        "venue_name": "East End Books Ptown",
+        "town": "Provincetown",
+        "country": "US"
+    },
+    {
+        "name": "Ellen LaCorte",
+        "event_name": "Ellen LaCorte Reads & Signs THE PERFECT FRAUD",
+        "venueId": "33181832",
+        "url": "https://www.eventbrite.com/e/ellen-lacorte-reads-signs-the-perfect-fraud-tickets-63396570850?aff=ebapi",
+        "event_time": "2019-06-18T19:00:00",
+        "goodreads_id": "18191784",
+        "venue_name": "The Bookmark Shoppe",
+        "town": "Brooklyn",
+        "country": "US"
+    },
+    {
+        "name": "Julia Chapman",
+        "event_name": "Author Event: Book signing with Julia Chapman",
+        "venueId": "33245045",
+        "url": "https://www.eventbrite.co.uk/e/author-event-book-signing-with-julia-chapman-tickets-63470393656?aff=ebapi",
+        "event_time": "2019-07-02T12:00:00",
+        "goodreads_id": "15189067",
+        "venue_name": "Castlegate Books",
+        "town": "Knaresborough",
+        "country": "GB"
+    },
+    {
+        "name": "Andrew Shaffer",
+        "event_name": "Book Signing with Author Andrew Shaffer | Hope Rides Again",
+        "venueId": "26500698",
+        "url": "https://www.eventbrite.com/e/book-signing-with-author-andrew-shaffer-hope-rides-again-tickets-58647557423?aff=ebapi",
+        "event_time": "2019-07-14T10:00:00",
+        "goodreads_id": "4111356",
+        "venue_name": "Browseabout Books",
+        "town": "Rehoboth Beach",
+        "country": "US"
+    }
+]
